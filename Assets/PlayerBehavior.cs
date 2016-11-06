@@ -7,6 +7,7 @@ public class PlayerBehavior : MonoBehaviour {
     public int rotateSpeed;
     public int bulletForce;
     public GameObject[] projectile;
+    public string playerPrefix;
     // Use this for initialization
     void Start () {
         _health = startingHealth;
@@ -27,6 +28,7 @@ public class PlayerBehavior : MonoBehaviour {
     void shoot()
     {
         GameObject go = (GameObject)Object.Instantiate(projectile[0], transform.position, Quaternion.identity);
+        go.GetComponent<ProjectileBehavior>().launchedby = playerPrefix;
         go.GetComponent<Rigidbody2D>().AddForce(new Vector2(-transform.position.x*bulletForce,-transform.position.y * bulletForce));
     }
     void ApplyDamage(int amount)
@@ -35,25 +37,17 @@ public class PlayerBehavior : MonoBehaviour {
     }
     void checkInput()
     {
-        if (Input.GetJoystickNames().Length > 0)
-        {
-            // there's at least one joysticks
-
-        }
-        else
-        {
-            if (Input.GetKey("left"))
+            if (Input.GetButton(playerPrefix+"_left"))
             {
                 goLeft();
             }
-            if (Input.GetKey("right"))
+            if (Input.GetButton(playerPrefix + "_right"))
             {
                 goRight();
             }
-            if (Input.GetKey("space"))
+            if (Input.GetButton(playerPrefix + "_fire"))
             {
                 shoot();
             }
-        }
     }
 }

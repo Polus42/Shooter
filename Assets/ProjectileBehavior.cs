@@ -2,7 +2,7 @@
 using System.Collections;
 
 public class ProjectileBehavior : MonoBehaviour {
-
+    public string launchedby;
 	// Use this for initialization
 	void Start () {
 
@@ -16,7 +16,7 @@ public class ProjectileBehavior : MonoBehaviour {
     {
         if (coll.collider.tag == "Player")
         {
-            Debug.Log("Collission with : " + coll.collider.tag);
+            Debug.Log("Collission with : " + coll.collider.name + " launched by " + launchedby);
             coll.gameObject.SendMessage("ApplyDamage", 10);
             Explode();
         }

@@ -19,6 +19,7 @@ public class SunBehavior : MonoBehaviour {
     void emitProjectile()
     {
         GameObject go = (GameObject)Object.Instantiate(projectile[0],transform.position,Quaternion.identity);
+        go.GetComponent<ProjectileBehavior>().launchedby = "sun";
         go.GetComponent<Rigidbody2D>().AddForce(new Vector2(Random.Range(-10,10)*force, Random.Range(-10, 10)*force));
     }
 }
