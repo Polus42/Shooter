@@ -16,8 +16,12 @@ public class ProjectileBehavior : MonoBehaviour {
     {
         if (coll.collider.tag == "Player")
         {
-            Debug.Log("Collission with : " + coll.collider.name + " launched by " + launchedby);
-            coll.gameObject.SendMessage("ApplyDamage", 10);
+            coll.gameObject.SendMessage("ApplyDamage", 1);
+            Explode();
+        }
+        if (coll.collider.tag == "WeakPoint")
+        {
+            coll.gameObject.SendMessage("ApplyDamage", 1);
             Explode();
         }
     }
