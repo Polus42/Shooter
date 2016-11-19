@@ -3,10 +3,12 @@ using System.Collections;
 
 public class SenpaiController : MonoBehaviour {
     public int rotateSpeed;
+    public int startingHealth = 10;
     private int _currentdirection;
+    private int _health;
     // Use this for initialization
     void Start () {
-	
+	    _health = startingHealth;
 	}
 	
 	// Update is called once per frame
@@ -39,5 +41,13 @@ public class SenpaiController : MonoBehaviour {
     void goRight()
     {
         transform.RotateAround(Vector3.zero, new Vector3(0, 0, 1), -rotateSpeed * Time.deltaTime);
+    }
+    void ApplyDamage(int amount)
+    {
+        _health -= amount;
+        if (_health <= 0)
+        {
+            Destroy(gameObject);
+        }
     }
 }

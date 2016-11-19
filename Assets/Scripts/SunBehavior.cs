@@ -13,7 +13,7 @@ public class SunBehavior : MonoBehaviour {
 	void Update () {
 	    if((int)Random.Range(0,10) == 0)
         {
-            emitProjectile();
+            //emitProjectile();
         }
 	}
     void emitProjectile()

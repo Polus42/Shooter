@@ -24,6 +24,10 @@ public class ProjectileBehavior : MonoBehaviour {
             coll.gameObject.SendMessage("ApplyDamage", 1);
             Explode();
         }
+        if (coll.collider.name == "Shield")
+        {
+            Destroy(gameObject);
+        }
     }
     void Explode()
     {
