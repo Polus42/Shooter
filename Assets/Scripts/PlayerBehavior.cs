@@ -15,6 +15,8 @@ public class PlayerBehavior : MonoBehaviour {
     public float shieldTime;
     public float shieldReloadTime;
     public bool autoMove;
+    public int _PF = 0;
+    public bool viseeAuto = false;
     // Private attributes
     private int _health;
     private Transform _cursor_center;
@@ -137,11 +139,15 @@ public class PlayerBehavior : MonoBehaviour {
             {
             CancelInvoke("shoot");
             }
-            if (Input.GetAxis(playerPrefix + "_horizontal_2") != 0)
+            if (Input.GetAxis(playerPrefix + "_horizontal_2") != 0 || Input.GetAxis(playerPrefix + "_vertical_2") != 0)
             {
             float x = Input.GetAxis(playerPrefix + "_horizontal_2");
             float y = Input.GetAxis(playerPrefix + "_vertical_2");
             _cursor_center.transform.localEulerAngles = new Vector3(transform.eulerAngles.x, transform.eulerAngles.y, -Mathf.Atan2(x, y) * Mathf.Rad2Deg);
+        }
+            else
+        {
+            _cursor_center.transform.rotation = transform.localRotation;
         }
         // Boost /////////////////////////////////////////
         if (Input.GetButtonDown(playerPrefix+"_boost"))
