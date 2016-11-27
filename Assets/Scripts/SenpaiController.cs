@@ -10,7 +10,7 @@ public class SenpaiController : MonoBehaviour {
     // Use this for initialization
     void Start () {
 	    _health = startingHealth;
-        say("Bonjour",5);
+        say("Bonjour",50);
 	}
 	
 	// Update is called once per frame

@@ -61,6 +61,7 @@ public class PlayerBehavior : MonoBehaviour {
     }
     void shoot()
     {
+        GetComponent<AudioSource>().Play();
         GameObject go = (GameObject)Object.Instantiate(projectile[0], transform.position, Quaternion.identity);
         go.GetComponent<ProjectileBehavior>().launchedby = playerPrefix;
         if (playerPrefix == "P1")
