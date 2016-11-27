@@ -24,6 +24,7 @@ public class PlayerBehavior : MonoBehaviour {
     private float _boostTime;
     private int _rotateSpeed;
     private float _shieldTime;
+    private AudioSource[] _audioSources;
     // Use this for initialization
     void Start () {
         // assigning cursor
@@ -35,6 +36,8 @@ public class PlayerBehavior : MonoBehaviour {
         _rotateSpeed = initialSpeed;
         _shieldTime = 0;
         transform.GetChild(3).gameObject.SetActive(false);
+        // Audio
+        _audioSources = GetComponents<AudioSource>();
     }
 	
 	// Update is called once per frame
@@ -61,9 +64,9 @@ public class PlayerBehavior : MonoBehaviour {
     }
     void shoot()
     {
-        GetComponent<AudioSource>().Play();
+        _audioSources[0].Play();
         GameObject go = (GameObject)Object.Instantiate(projectile[0], transform.position, Quaternion.identity);
-        go.GetComponent<ProjectileBehavior>().launchedby = playerPrefix;
+        go.GetComponent<PlayerProjectile>().launchedby = playerPrefix;
         if (playerPrefix == "P1")
         {
             go.layer = 8;
@@ -95,8 +98,10 @@ public class PlayerBehavior : MonoBehaviour {
     }
     IEnumerator initSpeed()
     {
+        _audioSources[2].Play();
         yield return new WaitForSeconds(boostTime);
         _rotateSpeed = initialSpeed;
+        _audioSources[2].Stop();
     }
     // Shield
     void shield()
@@ -110,8 +115,10 @@ public class PlayerBehavior : MonoBehaviour {
     }
     IEnumerator initShield()
     {
+        _audioSources[1].Play();
         yield return new WaitForSeconds(shieldTime);
         transform.GetChild(3).gameObject.SetActive(false);
+        _audioSources[1].Stop();
     }
     void checkInput()
     {

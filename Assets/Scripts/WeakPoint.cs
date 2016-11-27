@@ -11,13 +11,26 @@ public class WeakPoint : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-	    if (_health<=0)
-        {
-            Destroy(gameObject);
-        }
+
 	}
-    void ApplyDamage(int howmany)
+    void OnCollisionEnter2D(Collision2D coll)
     {
-        _health -= howmany;
+        if (coll.gameObject.GetComponent<PlayerProjectile>() != null)
+        {
+            _health--;
+            if (_health<=0)
+            {
+                if (coll.gameObject.GetComponent<PlayerProjectile>().launchedby == "P1")
+                {
+                    GameObject.FindGameObjectWithTag("Senpai").SendMessage("OnP1DestroyWeakpoint");
+                }
+                else
+                {
+                    GameObject.FindGameObjectWithTag("Senpai").SendMessage("OnP2DestroyWeakpoint");
+                }
+                Destroy(gameObject);
+            }
+        }
+        Destroy(coll.gameObject);
     }
 }

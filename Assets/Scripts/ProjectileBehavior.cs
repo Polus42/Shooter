@@ -32,7 +32,7 @@ public class ProjectileBehavior : MonoBehaviour {
     void Explode()
     {
         var exp = GetComponent<ParticleSystem>();
-        exp.Play();
+        //exp.Play();
         Destroy(gameObject, exp.duration);
     }
 }
