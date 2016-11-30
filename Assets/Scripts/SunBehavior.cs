@@ -41,6 +41,17 @@ public class SunBehavior : MonoBehaviour {
                 }
                 Destroy(gameObject);
             }
+            else
+            {
+                if (coll.gameObject.GetComponent<PlayerProjectile>().launchedby == "P1")
+                {
+                    GameObject.FindGameObjectWithTag("Senpai").SendMessage("OnP1AttackSun");
+                }
+                else
+                {
+                    GameObject.FindGameObjectWithTag("Senpai").SendMessage("OnP2AttackSun");
+                }
+            }
         }
         Destroy(coll.gameObject);
     }

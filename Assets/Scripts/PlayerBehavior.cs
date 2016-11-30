@@ -64,6 +64,7 @@ public class PlayerBehavior : MonoBehaviour {
     }
     void shoot()
     {
+        GameObject.Find("Senpai").SendMessage("On"+playerPrefix+"shoot");
         _audioSources[0].Play();
         GameObject go = (GameObject)Object.Instantiate(projectile[0], transform.position, Quaternion.identity);
         go.GetComponent<PlayerProjectile>().launchedby = playerPrefix;
@@ -91,7 +92,14 @@ public class PlayerBehavior : MonoBehaviour {
     {
         if (_boostTime==0)
         {
-            _rotateSpeed += speedBonus;
+            if (_rotateSpeed<0)
+            {
+                _rotateSpeed -= speedBonus;
+            }
+            else
+            {
+                _rotateSpeed += speedBonus;
+            }
             StartCoroutine(initSpeed());
            _boostTime = boostReloadTime;
         }
@@ -100,8 +108,15 @@ public class PlayerBehavior : MonoBehaviour {
     {
         _audioSources[2].Play();
         yield return new WaitForSeconds(boostTime);
-        _rotateSpeed = initialSpeed;
-        _audioSources[2].Stop();
+        if (_rotateSpeed<0)
+        {
+            _rotateSpeed = -initialSpeed;
+        }
+        else
+        {
+            _rotateSpeed = initialSpeed;
+        }
+        _audioSources[2].Pause();
     }
     // Shield
     void shield()
