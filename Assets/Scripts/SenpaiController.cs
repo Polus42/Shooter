@@ -4,6 +4,7 @@ using System.Collections;
 public class SenpaiController : MonoBehaviour {
     public int rotateSpeed;
     public int startingHealth = 10;
+    public Vector2 messageSize;
     // Messages list
     public GUISkin messages;
     private int _currentdirection;
@@ -38,31 +39,31 @@ public class SenpaiController : MonoBehaviour {
     public float getAwayTime = 5;
     private float _P1EnteredOpposed = Mathf.Infinity; // time when P1 entered the zone around SENPAIIIIIIIIII
     private float _P2EnteredOpposed = Mathf.Infinity;
+    // Rancune
+    private bool _rancuneP1 = false;
+    private bool _rancuneP2 = false;
     // Use this for initialization
     void Start () {
 	    _health = startingHealth;
-        startMissionDestroyWeakpoint(10);
+        //startMissionDestroyWeakpoint(10);
 	}
 	
 	// Update is called once per frame
 	void Update () {
         moveRandom();
-        if (_currentdirection == 1)
+        goRight();
+        Debug.Log(_rancuneP1);
+        /*if (_currentdirection == 1)
         {
             goLeft();
         }
         else if (_currentdirection == -1)
         {
             goRight();
-        }
-        else
-        {
-            //don't move
-        }
+        }*/
 
         Vector3 diff = new Vector3(0,0,0) - transform.position;
         diff.Normalize();
-
         float rot_z = Mathf.Atan2(diff.y, diff.x) * Mathf.Rad2Deg;
         transform.rotation = Quaternion.Euler(0f, 0f, rot_z +90);
         GameObject.Find("OpposedZoneAnchor").transform.rotation = Quaternion.Euler(0f, 0f, rot_z );
@@ -98,9 +99,9 @@ public class SenpaiController : MonoBehaviour {
         GUI.skin = messages;
         if (_whatimsaying!="")
         {
-            Vector3 v = Camera.main.WorldToScreenPoint(new Vector3(0,0,0));
-            Vector2 v2 = Vector2.Lerp(v,transform.position,0.5f);
-            GUI.Box(new Rect(v2.x, v2.y, 100, 80), _whatimsaying);
+            Vector2 v = Vector2.Lerp(new Vector3(0,0,0),transform.position,0.5f);
+            Vector2 v2 = Camera.main.WorldToScreenPoint(v);
+            GUI.Box(new Rect(v2.x-messageSize.x/2, Screen.height- v2.y-messageSize.y/2, messageSize.x, messageSize.y), _whatimsaying);
         }
     }
     void say(string whatisay,float timelasting)
@@ -219,14 +220,26 @@ public class SenpaiController : MonoBehaviour {
         if (coll.gameObject.name == "Player1")
         {
             _P1Entered = Time.time;
+            // Rancune
+            if (_rancuneP1)
+            {
+                coll.gameObject.GetComponent<PlayerBehavior>().slow(3);
+                _rancuneP1 = false;
+            }
         }
         else if (coll.gameObject.name == "Player2")
         {
             _P2Entered = Time.time;
+            // Rancune
+            if (_rancuneP2)
+            {
+                coll.gameObject.GetComponent<PlayerBehavior>().slow(3);
+                _rancuneP2 = false;
+            }
         }
     }
     // Missions caprice ///////////////////////////////////
-    // Misssion stay near me ///////////////////////////////////
+    // Misssion stop fireing ///////////////////////////////////
     void startMissionStopFireing(float tempsmission)
     {
         _MissionStopFireing = true;
@@ -243,18 +256,22 @@ public class SenpaiController : MonoBehaviour {
         if (_P1Fired)
         {
             GameObject.Find("Player1").GetComponent<PlayerBehavior>()._PF -= PF_lost;
+            startRancuneP1();
         }
         else
         {
             GameObject.Find("Player1").GetComponent<PlayerBehavior>()._PF += 100;
+            _rancuneP1 = false;
         }
         if (_P2Fired)
         {
             GameObject.Find("Player2").GetComponent<PlayerBehavior>()._PF -= PF_lost;
+            startRancuneP2();
         }
         else
         {
             GameObject.Find("Player2").GetComponent<PlayerBehavior>()._PF += 100;
+            _rancuneP2 = false;
         }
     }
     void OnP1shoot()
@@ -284,6 +301,7 @@ public class SenpaiController : MonoBehaviour {
         else
         {
             GameObject.Find("Player1").GetComponent<PlayerBehavior>()._PF -= PF_lost;
+            startRancuneP1();
         }
         if (Time.time - _P2EnteredOpposed > getAwayTime)
         {
@@ -292,6 +310,7 @@ public class SenpaiController : MonoBehaviour {
         else
         {
             GameObject.Find("Player2").GetComponent<PlayerBehavior>()._PF -= PF_lost;
+            startRancuneP2();
         }
         _MissionGetAway = false;
     }
@@ -302,6 +321,27 @@ public class SenpaiController : MonoBehaviour {
     void OnP2EnterOpposed()
     {
         _P2EnteredOpposed = Time.time;
+    }
+    //////////////////////////////////////////////////////////////////////
+    // Rancune     ///////////////////////////////////////////////////////
+    //////////////////////////////////////////////////////////////////////
+    void startRancuneP1()
+    {
+        StartCoroutine(rancuneP1());
+    }
+    IEnumerator rancuneP1()
+    {
+        yield return new WaitForSeconds(Random.Range(4,6));
+        _rancuneP1 = true;
+    }
+    void startRancuneP2()
+    {
+        StartCoroutine(rancuneP2());
+    }
+    IEnumerator rancuneP2()
+    {
+        yield return new WaitForSeconds(Random.Range(4, 6));
+        _rancuneP2 = true;
     }
     //////////////////////////////////////////////////////////////////////
     void startRandomMission()

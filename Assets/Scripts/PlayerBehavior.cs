@@ -104,6 +104,25 @@ public class PlayerBehavior : MonoBehaviour {
            _boostTime = boostReloadTime;
         }
     }
+    public void slow(float factor)
+    {
+        _rotateSpeed = _rotateSpeed / 2;
+        StartCoroutine(initSpeedUntil(10));
+    }
+    IEnumerator initSpeedUntil(float time)
+    {
+        _audioSources[2].Play();
+        yield return new WaitForSeconds(time);
+        if (_rotateSpeed < 0)
+        {
+            _rotateSpeed = -initialSpeed;
+        }
+        else
+        {
+            _rotateSpeed = initialSpeed;
+        }
+        _audioSources[2].Pause();
+    }
     IEnumerator initSpeed()
     {
         _audioSources[2].Play();
