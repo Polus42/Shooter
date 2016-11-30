@@ -3,18 +3,28 @@ using System.Collections;
 
 public class ProjectileBehavior : MonoBehaviour {
     public string launchedby;
-	// Use this for initialization
-	void Start () {
+    private Renderer red;
 
+
+    // Use this for initialization
+    void Start () {
+        red = GetComponent<Renderer>();
     }
 	
 	// Update is called once per frame
 	void Update () {
-	    
+        if (!red.isVisible)
+        {
+            //Debug.Log("projectile hors ecran");
+            //Destroy(gameObject);
+            this.gameObject.SetActive(false);
+        }
+            
 	}
-    void OnCollisionEnter2D(Collision2D coll)
+    void OnTriggerEnter2D(Collider2D coll)
     {
-        if (coll.collider.tag == "Player")
+        //Debug.Log("projectile touched: " + coll.gameObject.name);
+        /*if (coll.collider.tag == "Player")
         {
             coll.gameObject.SendMessage("ApplyDamage", 1);
             Explode();
@@ -26,13 +36,16 @@ public class ProjectileBehavior : MonoBehaviour {
         }
         if (coll.collider.name == "Shield")
         {
-            Destroy(gameObject);
+            //Destroy(gameObject);
+            this.gameObject.SetActive(false);
         }
+        */
     }
     void Explode()
     {
-        var exp = GetComponent<ParticleSystem>();
+        //var exp = GetComponent<ParticleSystem>();
         //exp.Play();
-        Destroy(gameObject, exp.duration);
+        //Destroy(gameObject);//, exp.duration);
+        this.gameObject.SetActive(false);
     }
 }
