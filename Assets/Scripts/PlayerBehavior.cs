@@ -25,6 +25,7 @@ public class PlayerBehavior : MonoBehaviour {
     private int _rotateSpeed;
     private float _shieldTime;
     private AudioSource[] _audioSources;
+    private bool _shield = false;
     // Use this for initialization
     void Start () {
         // assigning cursor
@@ -86,10 +87,13 @@ public class PlayerBehavior : MonoBehaviour {
     }
     void ApplyDamage(int amount)
     {
-        _health -= amount;
-        if (_health<=0)
+        if (!_shield)
         {
-            Destroy(gameObject);
+            _health -= amount;
+            if (_health <= 0)
+            {
+                Destroy(gameObject);
+            }
         }
     }
     // Actions spéciales ///////////////////////////////////////
@@ -148,6 +152,7 @@ public class PlayerBehavior : MonoBehaviour {
     {
         if (_shieldTime==0)
         {
+            _shield = true;
             transform.GetChild(3).gameObject.SetActive(true);
             StartCoroutine(initShield());
             _shieldTime = shieldReloadTime;
@@ -157,6 +162,7 @@ public class PlayerBehavior : MonoBehaviour {
     {
         _audioSources[1].Play();
         yield return new WaitForSeconds(shieldTime);
+        _shield = false;
         transform.GetChild(3).gameObject.SetActive(false);
         _audioSources[1].Stop();
     }

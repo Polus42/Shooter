@@ -14,6 +14,18 @@ public class Shield : MonoBehaviour {
 	}
     void OnCollisionEnter2D(Collision2D coll)
     {
-        _audiosource.Play();
+        if (coll.gameObject.GetComponent<ProjectileBehavior>()!=null)
+        {
+            Destroy(coll.gameObject);
+            _audiosource.Play();
+        }
+    }
+    void OnTriggerEnter2D(Collider2D other)
+    {
+        if (other.gameObject.GetComponent<ProjectileBehavior>() != null)
+        {
+            Destroy(other.gameObject);
+            _audiosource.Play();
+        }
     }
 }

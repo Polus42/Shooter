@@ -5,6 +5,10 @@ public class SenpaiController : MonoBehaviour {
     public int rotateSpeed;
     public int startingHealth = 10;
     public Vector2 messageSize;
+    // Sprites
+    public Sprite happySprite;
+    public Sprite angrySprite;
+    public Sprite neutralSprite;
     // Messages list
     public GUISkin messages;
     private int _currentdirection;
@@ -68,6 +72,17 @@ public class SenpaiController : MonoBehaviour {
 
         startRandomMission();
     }
+    void updateFace()
+    {
+        if (_rancuneP1 || _rancuneP2)
+        {
+            GetComponent<SpriteRenderer>().sprite = angrySprite;
+        }
+        else
+        {
+            GetComponent<SpriteRenderer>().sprite = neutralSprite;
+        }
+    }
     void moveRandom()
     {
         if (Random.Range(0,100)==0)
@@ -129,8 +144,10 @@ public class SenpaiController : MonoBehaviour {
     {
         if (_MissionDestroyWeakpoint)
         {
-            GameObject.Find("Player1").GetComponent<PlayerBehavior>()._PF += 100;
-            GameObject.Find("Player2").GetComponent<PlayerBehavior>()._PF += 100;
+            if (GameObject.Find("Player1") != null)
+                GameObject.Find("Player1").GetComponent<PlayerBehavior>()._PF += 100;
+            if (GameObject.Find("Player2")!= null)
+                GameObject.Find("Player2").GetComponent<PlayerBehavior>()._PF += 100;
             _MissionDestroyWeakpoint = false;
         }
     }
@@ -138,8 +155,10 @@ public class SenpaiController : MonoBehaviour {
     {
         if (_MissionDestroyWeakpoint)
         {
-            GameObject.Find("Player1").GetComponent<PlayerBehavior>()._PF += 100;
-            GameObject.Find("Player2").GetComponent<PlayerBehavior>()._PF += 100;
+            if (GameObject.Find("Player1") != null)
+                GameObject.Find("Player1").GetComponent<PlayerBehavior>()._PF += 100;
+            if (GameObject.Find("Player2") != null)
+                GameObject.Find("Player2").GetComponent<PlayerBehavior>()._PF += 100;
             _MissionDestroyWeakpoint = false;
         }
     }
@@ -155,19 +174,23 @@ public class SenpaiController : MonoBehaviour {
         yield return new WaitForSeconds(temps);
         if (_playersTouchedSun[0] > SunAttackAmount)
         {
-            GameObject.Find("Player1").GetComponent<PlayerBehavior>()._PF += 100;
+            if (GameObject.Find("Player1") != null)
+                GameObject.Find("Player1").GetComponent<PlayerBehavior>()._PF += 100;
         }
         else
         {
-            GameObject.Find("Player1").GetComponent<PlayerBehavior>()._PF -= PF_lost;
+            if (GameObject.Find("Player1") != null)
+                GameObject.Find("Player1").GetComponent<PlayerBehavior>()._PF -= PF_lost;
         }
         if (_playersTouchedSun[1] > SunAttackAmount)
         {
-            GameObject.Find("Player2").GetComponent<PlayerBehavior>()._PF += 100;
+            if (GameObject.Find("Player2") != null)
+                GameObject.Find("Player2").GetComponent<PlayerBehavior>()._PF += 100;
         }
         else
         {
-            GameObject.Find("Player2").GetComponent<PlayerBehavior>()._PF -= PF_lost;
+            if (GameObject.Find("Player2") != null)
+                GameObject.Find("Player2").GetComponent<PlayerBehavior>()._PF -= PF_lost;
         }
         _playersTouchedSun[0] = 0;
         _playersTouchedSun[1] = 0;
@@ -186,55 +209,65 @@ public class SenpaiController : MonoBehaviour {
     void startMissionStayNearMe(float tempsmission)
     {
         _MissionStayNearMe = true;
-        _P1Entered = Mathf.Infinity;
-        _P2Entered = Mathf.Infinity;
         say(staynearmePhrase, missionTextTime);
         StartCoroutine(checkMissionStayNearMe(tempsmission));
     }
     IEnumerator checkMissionStayNearMe(float temps)
     {
         yield return new WaitForSeconds(temps);
+        Debug.Log(Time.time - _P1Entered);
         if (Time.time - _P1Entered > stayCloseToMeTime)
         {
+            if (GameObject.Find("Player1")!=null)
             GameObject.Find("Player1").GetComponent<PlayerBehavior>()._PF += 100;
         }
         else
         {
-            GameObject.Find("Player1").GetComponent<PlayerBehavior>()._PF -= PF_lost;
+            if (GameObject.Find("Player1") != null)
+                GameObject.Find("Player1").GetComponent<PlayerBehavior>()._PF -= PF_lost;
         }
         if (Time.time - _P2Entered > stayCloseToMeTime)
         {
-            GameObject.Find("Player2").GetComponent<PlayerBehavior>()._PF += 100;
+            if (GameObject.Find("Player2") != null)
+                GameObject.Find("Player2").GetComponent<PlayerBehavior>()._PF += 100;
         }
         else
         {
-            GameObject.Find("Player2").GetComponent<PlayerBehavior>()._PF -= PF_lost;
+            if (GameObject.Find("Player2")!= null)
+                GameObject.Find("Player2").GetComponent<PlayerBehavior>()._PF -= PF_lost;
         }
         _MissionStayNearMe = false;
 
     }
-    void OnTriggerEnter2D(Collider2D coll)
+    void OnP1EnterCloseZone()
     {
-        if (coll.gameObject.name == "Player1")
+        _P1Entered = Time.time;
+        // Rancune
+        if (_rancuneP1)
         {
-            _P1Entered = Time.time;
-            // Rancune
-            if (_rancuneP1)
-            {
-                coll.gameObject.GetComponent<PlayerBehavior>().slow(3);
-                _rancuneP1 = false;
-            }
+            if (GameObject.Find("Player1")!=null)
+            GameObject.Find("Player1").GetComponent<PlayerBehavior>().slow(3);
+            _rancuneP1 = false;
         }
-        else if (coll.gameObject.name == "Player2")
+    }
+    void OnP2EnterCloseZone()
+    {
+        _P2Entered = Time.time;
+        // Rancune
+        if (_rancuneP2)
         {
-            _P2Entered = Time.time;
-            // Rancune
-            if (_rancuneP2)
-            {
-                coll.gameObject.GetComponent<PlayerBehavior>().slow(3);
-                _rancuneP2 = false;
-            }
+            if (GameObject.Find("Player2") != null)
+            GameObject.Find("Player2").GetComponent<PlayerBehavior>().slow(3);
+            _rancuneP2 = false;
         }
+    }
+    void OnP1ExitCloseZone()
+    {
+        _P1Entered = Mathf.Infinity;
+    }
+    void OnP2ExitCloseZone()
+    {
+        _P2Entered = Mathf.Infinity;
     }
     // Missions caprice ///////////////////////////////////
     // Misssion stop fireing ///////////////////////////////////
@@ -253,22 +286,26 @@ public class SenpaiController : MonoBehaviour {
         _MissionStopFireing = false;
         if (_P1Fired)
         {
-            GameObject.Find("Player1").GetComponent<PlayerBehavior>()._PF -= PF_lost;
+            if (GameObject.Find("Player1") != null)
+                GameObject.Find("Player1").GetComponent<PlayerBehavior>()._PF -= PF_lost;
             startRancuneP1();
         }
         else
         {
-            GameObject.Find("Player1").GetComponent<PlayerBehavior>()._PF += 100;
+            if (GameObject.Find("Player1") != null)
+                GameObject.Find("Player1").GetComponent<PlayerBehavior>()._PF += 100;
             _rancuneP1 = false;
         }
         if (_P2Fired)
         {
-            GameObject.Find("Player2").GetComponent<PlayerBehavior>()._PF -= PF_lost;
+            if (GameObject.Find("Player2") != null)
+                GameObject.Find("Player2").GetComponent<PlayerBehavior>()._PF -= PF_lost;
             startRancuneP2();
         }
         else
         {
-            GameObject.Find("Player2").GetComponent<PlayerBehavior>()._PF += 100;
+            if (GameObject.Find("Player2") != null)
+                GameObject.Find("Player2").GetComponent<PlayerBehavior>()._PF += 100;
             _rancuneP2 = false;
         }
     }
@@ -284,8 +321,6 @@ public class SenpaiController : MonoBehaviour {
     void startMissionGetAway(float tempsmission)
     {
         _MissionGetAway = true;
-        _P1EnteredOpposed = Mathf.Infinity;
-        _P2EnteredOpposed = Mathf.Infinity;
         say(getAwayPhrase, missionTextTime);
         StartCoroutine(checkMissionGetAway(tempsmission));
     }
@@ -294,20 +329,24 @@ public class SenpaiController : MonoBehaviour {
         yield return new WaitForSeconds(temps);
         if (Time.time - _P1EnteredOpposed > getAwayTime)
         {
-            GameObject.Find("Player1").GetComponent<PlayerBehavior>()._PF += 100;
+            if (GameObject.Find("Player1")!= null)
+                GameObject.Find("Player1").GetComponent<PlayerBehavior>()._PF += 100;
         }
         else
         {
-            GameObject.Find("Player1").GetComponent<PlayerBehavior>()._PF -= PF_lost;
+            if (GameObject.Find("Player1")!= null)
+                GameObject.Find("Player1").GetComponent<PlayerBehavior>()._PF -= PF_lost;
             startRancuneP1();
         }
         if (Time.time - _P2EnteredOpposed > getAwayTime)
         {
-            GameObject.Find("Player2").GetComponent<PlayerBehavior>()._PF += 100;
+            if (GameObject.Find("Player2") != null)
+                GameObject.Find("Player2").GetComponent<PlayerBehavior>()._PF += 100;
         }
         else
         {
-            GameObject.Find("Player2").GetComponent<PlayerBehavior>()._PF -= PF_lost;
+            if (GameObject.Find("Player2") != null)
+                GameObject.Find("Player2").GetComponent<PlayerBehavior>()._PF -= PF_lost;
             startRancuneP2();
         }
         _MissionGetAway = false;
@@ -319,6 +358,14 @@ public class SenpaiController : MonoBehaviour {
     void OnP2EnterOpposed()
     {
         _P2EnteredOpposed = Time.time;
+    }
+    void OnP1ExitOpposed()
+    {
+        _P1EnteredOpposed = Mathf.Infinity;
+    }
+    void OnP2ExitOpposed()
+    {
+        _P2EnteredOpposed = Mathf.Infinity;
     }
     //////////////////////////////////////////////////////////////////////
     // Rancune     ///////////////////////////////////////////////////////
@@ -340,6 +387,17 @@ public class SenpaiController : MonoBehaviour {
     {
         yield return new WaitForSeconds(Random.Range(4, 6));
         _rancuneP2 = true;
+    }
+    // Destroying missiles
+    void OnP1DestroyProjectile()
+    {
+        if (GameObject.Find("Player1") != null)
+            GameObject.Find("Player1").GetComponent<PlayerBehavior>()._PF += 1;
+    }
+    void OnP2DestroyProjectile()
+    {
+        if (GameObject.Find("Player2") != null)
+            GameObject.Find("Player2").GetComponent<PlayerBehavior>()._PF += 1;
     }
     //////////////////////////////////////////////////////////////////////
     void startRandomMission()
