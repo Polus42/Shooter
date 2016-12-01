@@ -124,6 +124,7 @@ public class SenpaiController : MonoBehaviour {
     }
     void say(string whatisay,float timelasting)
     {
+        GetComponents<AudioSource>()[0].Play();
         StartCoroutine(initSaying(timelasting,whatisay));
     }
     IEnumerator initSaying(float time,string text)
@@ -410,6 +411,7 @@ public class SenpaiController : MonoBehaviour {
     {
         if (coll.gameObject.GetComponent<PlayerProjectile>() != null)
         {
+            GetComponents<AudioSource>()[1].Play();
             Destroy(coll.gameObject);
             if (coll.gameObject.GetComponent<PlayerProjectile>().launchedby == "P1")
             {

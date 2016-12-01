@@ -87,6 +87,7 @@ public class PlayerBehavior : MonoBehaviour {
     }
     void ApplyDamage(int amount)
     {
+        GetComponents<AudioSource>()[3].Play();
         if (!_shield)
         {
             _health -= amount;

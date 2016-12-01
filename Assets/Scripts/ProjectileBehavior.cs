@@ -20,6 +20,7 @@ public class ProjectileBehavior : MonoBehaviour {
             //Destroy(gameObject);
             this.gameObject.SetActive(false);
         }
+        transform.Rotate(new Vector3(0,0,1));
             
 	}
     void OnTriggerEnter2D(Collider2D other)
