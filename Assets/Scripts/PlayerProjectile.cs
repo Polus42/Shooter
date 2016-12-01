@@ -18,4 +18,8 @@ public class PlayerProjectile : MonoBehaviour {
         //exp.Play();
         Destroy(gameObject, exp.duration);
     }
+    void OnCollisionEnter2D(Collision2D coll)
+    {
+        
+    }
 }

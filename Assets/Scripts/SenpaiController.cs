@@ -51,16 +51,14 @@ public class SenpaiController : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
         moveRandom();
-        goRight();
-        Debug.Log(_rancuneP1);
-        /*if (_currentdirection == 1)
+        if (_currentdirection == 1)
         {
             goLeft();
         }
         else if (_currentdirection == -1)
         {
             goRight();
-        }*/
+        }
 
         Vector3 diff = new Vector3(0,0,0) - transform.position;
         diff.Normalize();
@@ -68,7 +66,7 @@ public class SenpaiController : MonoBehaviour {
         transform.rotation = Quaternion.Euler(0f, 0f, rot_z +90);
         GameObject.Find("OpposedZoneAnchor").transform.rotation = Quaternion.Euler(0f, 0f, rot_z );
 
-        //startRandomMission();
+        startRandomMission();
     }
     void moveRandom()
     {
@@ -346,9 +344,9 @@ public class SenpaiController : MonoBehaviour {
     //////////////////////////////////////////////////////////////////////
     void startRandomMission()
     {
-        if (!_MissionDestroyWeakpoint && !_MissionAttackSun)
+        if (!_MissionDestroyWeakpoint && !_MissionAttackSun && !_MissionGetAway && !_MissionStopFireing && ! _MissionStayNearMe)
         {
-            int mission = Random.Range(1,3);
+            int mission = Random.Range(1,6);
             if (mission == 1)
             {
                 startMissionDestroyWeakpoint(missionTime);
@@ -356,6 +354,18 @@ public class SenpaiController : MonoBehaviour {
             else if (mission == 2)
             {
                 startMissionAttackSun(missionTime);
+            }
+            else if (mission == 3)
+            {
+                startMissionStayNearMe(missionTime);
+            }
+            else if (mission == 4)
+            {
+                startMissionGetAway(missionTime);
+            }
+            else if (mission == 5)
+            {
+                startMissionStopFireing(missionTime);
             }
         }
     }

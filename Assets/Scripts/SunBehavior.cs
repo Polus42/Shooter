@@ -66,7 +66,7 @@ public class SunBehavior : MonoBehaviour {
     }
     
 	void Start () {
-        //StartCoroutine(SelectingPaterns());
+        StartCoroutine(SelectingPaterns());
     }
 
     private void updateReferences()
@@ -151,12 +151,13 @@ public class SunBehavior : MonoBehaviour {
         OptionsHolder.IOptionPattern currentOptions;
         int chosen;
         float timeWait, waitAfter;
-
         yield return new WaitForSeconds(patternsOP.startWait);
         while (true)//is paused entre phase ?
         {
             chosen = Choose(probs);
+            Debug.Log("test");
             currentOptions = patterns[chosen];//patterns is sorted
+            Debug.Log("test");
             Debug.Log("patterns count: "+ patterns.Count);
 
             Debug.Log("prob : " + chosen);

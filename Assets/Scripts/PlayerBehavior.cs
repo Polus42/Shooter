@@ -68,6 +68,12 @@ public class PlayerBehavior : MonoBehaviour {
         _audioSources[0].Play();
         GameObject go = (GameObject)Object.Instantiate(projectile[0], transform.position, Quaternion.identity);
         go.GetComponent<PlayerProjectile>().launchedby = playerPrefix;
+        // lookatthecursor
+        Vector3 diff = _cursor.transform.position - transform.position;
+        diff.Normalize();
+        float rot_z = Mathf.Atan2(diff.y, diff.x) * Mathf.Rad2Deg;
+        go.transform.rotation = Quaternion.Euler(0f, 0f, rot_z);
+
         if (playerPrefix == "P1")
         {
             go.layer = 8;

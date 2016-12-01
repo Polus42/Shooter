@@ -23,19 +23,8 @@ public class WeakPoint : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-	    if (_health<=0)
-        {
-            EventManager.TriggerEvent("WeakPointDestroyed");
-            //Destroy(gameObject);
-            this.gameObject.SetActive(false);
-        }
-	}
 
-    void ApplyDamage(int howmany)
-    {
-        Debug.Log("weak point touched");
-        _health -= howmany;
-    }
+	}
 
     private void Awakening()
     {
@@ -47,4 +36,25 @@ public class WeakPoint : MonoBehaviour {
         //Test only
         EventManager.TriggerEvent("WeakPointDestroyed");
     }
+    void OnTriggerEnter2D(Collider2D other)
+    {
+        if (other.gameObject.GetComponent<PlayerProjectile>() != null)
+        {
+            _health--;
+            if (_health<=0)
+            {
+                this.gameObject.SetActive(false);
+                if (other.gameObject.GetComponent<PlayerProjectile>().launchedby == "P1")
+                {
+                    GameObject.Find("Senpai").SendMessage("OnP1DestroyWeakpoint");
+                }
+                else
+                {
+                    GameObject.Find("Senpai").SendMessage("OnP2DestroyWeakpoint");
+                }
+                EventManager.TriggerEvent("WeakPointDestroyed");
+            }
+        }
+    }
+
 }

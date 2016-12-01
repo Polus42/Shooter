@@ -3,6 +3,7 @@ using System.Collections;
 
 public class ProjectileBehavior : MonoBehaviour {
     public string launchedby;
+    public int _health = 1;
     private Renderer red;
 
 
@@ -21,25 +22,30 @@ public class ProjectileBehavior : MonoBehaviour {
         }
             
 	}
-    void OnTriggerEnter2D(Collider2D coll)
+    void OnTriggerEnter2D(Collider2D other)
     {
-        //Debug.Log("projectile touched: " + coll.gameObject.name);
-        /*if (coll.collider.tag == "Player")
+        if (other.gameObject.GetComponent<PlayerProjectile>() != null)
         {
-            coll.gameObject.SendMessage("ApplyDamage", 1);
-            Explode();
+            Destroy(other.gameObject);
+            _health--;
+            if (_health <= 0)
+            {
+                Destroy(gameObject);
+                if (other.gameObject.GetComponent<PlayerProjectile>().launchedby == "P1")
+                {
+                    GameObject.Find("Senpai").SendMessage("OnP1DestroyProjectile");
+                }
+                else
+                {
+                    GameObject.Find("Senpai").SendMessage("OnP2DestroyProjectile");
+                }
+            }
         }
-        if (coll.collider.tag == "WeakPoint")
+        else if(other.gameObject.GetComponent<PlayerBehavior>() != null)
         {
-            coll.gameObject.SendMessage("ApplyDamage", 1);
-            Explode();
+            other.gameObject.SendMessage("ApplyDamage",1);
+            Destroy(gameObject);
         }
-        if (coll.collider.name == "Shield")
-        {
-            //Destroy(gameObject);
-            this.gameObject.SetActive(false);
-        }
-        */
     }
     void Explode()
     {
@@ -48,4 +54,5 @@ public class ProjectileBehavior : MonoBehaviour {
         //Destroy(gameObject);//, exp.duration);
         this.gameObject.SetActive(false);
     }
+
 }
