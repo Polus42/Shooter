@@ -16,7 +16,7 @@ public class WeakPoint : MonoBehaviour {
     }
     
 	void Start () {
-        Awakening();
+        //Awakening();
         //startinghealth = sunOP.weakPointHealth;
         //_health = startinghealth;
     }
@@ -26,6 +26,11 @@ public class WeakPoint : MonoBehaviour {
 
 	}
 
+    void OnEnable()
+    {
+        Awakening();
+    }
+
     private void Awakening()
     {
         //this.gameObject.SetActive(true);
@@ -34,6 +39,7 @@ public class WeakPoint : MonoBehaviour {
         _health = sunOP.weakPointHealth;
 
         //Test only
+        this.gameObject.SetActive(false);
         EventManager.TriggerEvent("WeakPointDestroyed");
     }
     void OnTriggerEnter2D(Collider2D other)

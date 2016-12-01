@@ -15,7 +15,7 @@
 			"pauseTimeBetweenPhase": 3
 		},
 		"PatternsOptions": {
-			"startWait": 0,//Start waiting time (in addition of pauseTimeBetweenPhase)
+			"startWait": 3,//Start waiting time (in addition of pauseTimeBetweenPhase)
 			"waveWait":10,//waiting time before selecting new pattern
 			"nextWait":10//general duration for all pattern
 		},
@@ -34,12 +34,11 @@
 				},
 				"RotationPattern_V2" : { //OK
 					"name": "RotationPattern",
-					"probability": 0.0,
+					"probability": 0,
 					"cooldown": 10,
 					"frequency": 0.3,
 					"angle": 90,
 					"radius": 0.4,
-					"count": 1,
 					"bulletSpeed": 1.5,
 					"rotatingSpeed": 20,
 					"changeDirection": 3,
@@ -67,8 +66,8 @@
 			"CounterPhase": {
 				"CyclicPattern_V1" : { //OK
 					"name": "CyclicPattern",
-					"probability": 1,
-					"cooldown": 5,
+					"probability": 0.8,
+					"cooldown": 30,
 					"angle": 1,
 					"frequency": 0.3,
 					"mult": 1,
@@ -86,13 +85,12 @@
 					"frequency": 0.3,
 					"angle": 90,
 					"radius": 0.4,
-					"count": 1,
-					"bulletSpeed": 1.5,
+					"bulletSpeed": 3,
 					"rotatingSpeed": 20,
-					"changeDirection": 3,
-					"repeatChangeDirection": false,
+					"changeDirection": 1,
+					"repeatChangeDirection": true,
 					"maxRadius": 5,
-					"numberHelixes": 4
+					"numberHelixes": 2
 				}
 			}
 		},

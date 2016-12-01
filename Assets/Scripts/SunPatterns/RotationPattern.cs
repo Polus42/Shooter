@@ -12,13 +12,13 @@ public class RotationPattern : IPattern
     private ArrayList bullets;
     private bool addForce = false;
     private float currentAngle;
+    private int count = 1;
 
     //Options
     /*
     public float frequency = 0.3f;//frequency create helixes
     private float angle = 90;//Start angle
     private float radius = 0.4f;//influence separation between the projectiles
-    private int count = 1;
     private float bulletSpeed = 1.5f;
     private float rotatingSpeed = 20f;
     private float changeDirection = 3f;//change direction after this time
@@ -36,8 +36,11 @@ public class RotationPattern : IPattern
     public void setOptions(OptionsHolder.IOptionPattern options)
     {
         this.options = (OptionsHolder.RotationPatternOP) options;
-        counter = counterDirection = 0;
-        haveChangedDirection = addForce = false;
+        counter = 0;
+        counterDirection = 0;
+        count = 1;
+        haveChangedDirection = false;
+        addForce = false;
         currentAngle = this.options.angle;
     }
 
@@ -48,6 +51,7 @@ public class RotationPattern : IPattern
             counter += Time.deltaTime;
             if (counter >= options.frequency)
             {
+                //Debug.Log("emit rotation projectile");
                 emitProjectile();
                 counter = 0;
             }
@@ -99,15 +103,16 @@ public class RotationPattern : IPattern
         GameObject lastBullet = null;
         for (int i = 0; i < options.numberHelixes; i++)
         {
-            Vector3 thispos = new Vector3(options.count * options.radius, options.count * options.radius, 0);
+            Vector3 thispos = new Vector3(count * options.radius, count * options.radius, 0);
             thispos = Quaternion.Euler(0, 0, currentAngle) * thispos;
             lastBullet = GamePool.GetNextObject(sb.typeProjectiles[0], sb.transform.position + thispos, Quaternion.identity);
+            //Debug.Log("is active? " + lastBullet.gameObject.activeSelf);
             //lastBullet = (GameObject) GameObject.Instantiate(sb.typeProjectiles[0], sb.transform.position + thispos, Quaternion.identity);
             lastBullet.GetComponent<ProjectileBehavior>().launchedby = "sun";
             bullets.Add(lastBullet);
             currentAngle += (float) 360 / options.numberHelixes;
         }
-        options.count++;
+        count++;
 
         if((lastBullet.transform.position - sb.transform.position).magnitude > options.maxRadius)
         {

@@ -1,10 +1,12 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class UniversalGravity : MonoBehaviour {
     // Use this for initialization
     void Start()
     {
+        /*
         GameObject[] Objects = GameObject.FindGameObjectsWithTag("Player");
 
         //the gravity between each couple of object is calculated
@@ -12,7 +14,9 @@ public class UniversalGravity : MonoBehaviour {
         {
             ObjectA.GetComponent<Rigidbody2D>().AddForce(new Vector3(30, 0, 0));
         }
+        */
     }
+
     void ApplyGravity(Rigidbody2D A, Rigidbody2D B)
     {
         //This is how to get the distance vector between two objects.
@@ -32,7 +36,9 @@ public class UniversalGravity : MonoBehaviour {
     void FixedUpdate()
     {
         //Get every object 
-        GameObject[] Objects = GameObject.FindGameObjectsWithTag("Player");
+        //GameObject[] Objects = GameObject.FindGameObjectsWithTag("Player");
+        List<GameObject> Objects = new List<GameObject>(GameObject.FindGameObjectsWithTag("Asteroid"));
+        Objects.Add(GameObject.FindGameObjectWithTag("Sun"));
 
         //the gravity between each couple of object is calculated
         foreach (GameObject ObjectA in Objects)

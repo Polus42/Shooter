@@ -142,7 +142,6 @@ public class OptionsHolder
         public float frequency;
         public float angle;
         public float radius;
-        public int count;
         public float bulletSpeed;
         public float rotatingSpeed;
         public float changeDirection;
