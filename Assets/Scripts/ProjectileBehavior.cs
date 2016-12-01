@@ -31,7 +31,7 @@ public class ProjectileBehavior : MonoBehaviour {
             _health--;
             if (_health <= 0)
             {
-                Destroy(gameObject);
+                gameObject.SetActive(false);
                 if (other.gameObject.GetComponent<PlayerProjectile>().launchedby == "P1")
                 {
                     GameObject.Find("Senpai").SendMessage("OnP1DestroyProjectile");

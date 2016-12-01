@@ -13,6 +13,12 @@ public class SunBehavior : MonoBehaviour {
     private List<OptionsHolder.IOptionPattern> patterns;
     private List<float> probs;
 
+    //Sprites
+    public Sprite hurtSprite;
+    public Sprite sleepingSprite;
+    public Sprite normalSprite;
+    public Sprite angrySprite;
+
     //Used by patterns
     public float force
     {
@@ -89,6 +95,7 @@ public class SunBehavior : MonoBehaviour {
 
     private void goVulnerable()
     {
+        GetComponent<SpriteRenderer>().sprite = normalSprite;
         Debug.Log("go vulnerable");
         cc.enabled = true;
         block = false;
@@ -96,18 +103,42 @@ public class SunBehavior : MonoBehaviour {
 
     void OnTriggerEnter2D(Collider2D other)
     {
-        if (block)
-            return;
-        currentHits++;
-        if(currentHits >= sunOP.health)
+        PlayerProjectile p;
+        p = other.gameObject.GetComponent<PlayerProjectile>();
+        if (p!=null)
         {
-            block = true;
-            currentHits = 0;
-           
-            EventManager.TriggerEvent("SunInjured");
+            Destroy(other.gameObject);
+            // Telling senpai we are stronk
+            GameObject.Find("Senpai").SendMessage("On" + p.launchedby + "AttackSun");
+            if (block)
+                return;
+            StartCoroutine(beHurt());
+            currentHits++;
+            if (currentHits >= sunOP.health)
+            {
+                block = true;
+                currentHits = 0;
+
+                EventManager.TriggerEvent("SunInjured");
+            }
+            Debug.Log("sun touched");
         }
-        Debug.Log("sun touched");
-        
+    }
+
+    IEnumerator beHurt()
+    {
+        if (!GetComponents<AudioSource>()[3].isPlaying)
+            GetComponents<AudioSource>()[3].Play();
+        GetComponent<SpriteRenderer>().sprite = hurtSprite;
+        yield return new WaitForSeconds(0.1f);
+        if (block)
+        {
+            GetComponent<SpriteRenderer>().sprite = angrySprite;
+        }
+        else
+        {
+            GetComponent<SpriteRenderer>().sprite = normalSprite;
+        }
     }
 	
 	void Update () {

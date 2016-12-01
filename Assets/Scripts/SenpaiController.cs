@@ -221,7 +221,6 @@ public class SenpaiController : MonoBehaviour {
     IEnumerator checkMissionStayNearMe(float temps)
     {
         yield return new WaitForSeconds(temps);
-        Debug.Log(Time.time - _P1Entered);
         if (Time.time - _P1Entered > stayCloseToMeTime)
         {
             if (GameObject.Find("Player1")!=null)
