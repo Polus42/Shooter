@@ -26,11 +26,14 @@ public class ProjectileBehavior : MonoBehaviour {
     {
         if (other.gameObject.GetComponent<PlayerProjectile>() != null)
         {
-            Destroy(other.gameObject);
+            //Destroy(other.gameObject);
+            other.gameObject.SetActive(false);
+
             _health--;
             if (_health <= 0)
             {
-                Destroy(gameObject);
+                //Destroy(gameObject);
+                this.gameObject.SetActive(false);
                 if (other.gameObject.GetComponent<PlayerProjectile>().launchedby == "P1")
                 {
                     GameObject.Find("Senpai").SendMessage("OnP1DestroyProjectile");
@@ -44,7 +47,8 @@ public class ProjectileBehavior : MonoBehaviour {
         else if(other.gameObject.GetComponent<PlayerBehavior>() != null)
         {
             other.gameObject.SendMessage("ApplyDamage",1);
-            Destroy(gameObject);
+            //Destroy(gameObject);
+            this.gameObject.SetActive(false);
         }
     }
     void Explode()

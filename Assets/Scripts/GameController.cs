@@ -14,6 +14,8 @@ public class GameController : MonoBehaviour {
 
     private int currentLoopDifficulty;//++ a chaque retour survival state
 
+    public GameObject asteroidPrefab;
+
     void Awake() {
         //difficultyManager = new DifficultyManager(startDifficulty, startPhase, options);
         OptionsManager.Instance.init(startDifficulty, startPhase, options);

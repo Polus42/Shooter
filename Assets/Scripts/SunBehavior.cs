@@ -29,9 +29,12 @@ public class SunBehavior : MonoBehaviour {
     private IPattern currentPattern;
     private Dictionary<string, IPattern> patternsAvailable = new Dictionary<string, IPattern>();
 
-    private IEnumerator coroutine;
-    private List<IEnumerator> cooldowns;
-    
+    //private IEnumerator coroutine
+    private Coroutine lastRoutine = null;//holding selecting patterns coroutine
+    private Coroutine launchSelecting;//holding launching selecting patterns coroutine
+    //private List<IEnumerator> cooldowns;
+    private List<Coroutine> cooldowns;
+
     private Transform weakPoint;
 
     private bool block = false;//avoid taking damage in triggerevent
@@ -40,7 +43,7 @@ public class SunBehavior : MonoBehaviour {
     {
         updateReferences();
 
-        cooldowns = new List<IEnumerator>();
+        cooldowns = new List<Coroutine>();
 
         RotationPattern rotationPattern = new RotationPattern(this);
         CyclicPattern cyclicPattern = new CyclicPattern(this);
@@ -60,13 +63,13 @@ public class SunBehavior : MonoBehaviour {
 
         cc = GetComponent<CircleCollider2D>();
 
-        coroutine = SelectingPaterns();
+        //coroutine = SelectingPaterns();
 
         weakPoint = transform.Find("WeakPoint");
     }
     
 	void Start () {
-        StartCoroutine(SelectingPaterns());
+        //StartCoroutine(SelectingPaterns());
     }
 
     private void updateReferences()
@@ -96,6 +99,7 @@ public class SunBehavior : MonoBehaviour {
 
     void OnTriggerEnter2D(Collider2D other)
     {
+        //Test only
         if (block)
             return;
         currentHits++;
@@ -108,12 +112,44 @@ public class SunBehavior : MonoBehaviour {
         }
         Debug.Log("sun touched");
         
+        
     }
 	
 	void Update () {
-        if(currentPattern != null)
+
+        moveRandom();
+        if (_currentdirection == 1)
+        {
+            goLeft();
+        }
+        else if (_currentdirection == -1)
+        {
+            goRight();
+        }
+
+        if (currentPattern != null)
             currentPattern.UpdatePattern();
 	}
+
+    //-------------------
+    int _currentdirection = -1;
+    void moveRandom()
+    {
+        if (Random.Range(0, 100) == 0)
+        {
+            _currentdirection = Random.Range(-1, 2);
+        }
+    }
+    void goLeft()
+    {
+        transform.localEulerAngles = new Vector3(0f, 0f, transform.localEulerAngles.z + -10f * Time.deltaTime);
+    }
+    void goRight()
+    {
+        transform.localEulerAngles = new Vector3(0f, 0f, transform.localEulerAngles.z + 10f * Time.deltaTime);
+    }
+    //-------------------
+
 
     /*
     private float startWait = 1f;
@@ -151,13 +187,15 @@ public class SunBehavior : MonoBehaviour {
         OptionsHolder.IOptionPattern currentOptions;
         int chosen;
         float timeWait, waitAfter;
+        Debug.Log("startWait: "+ patternsOP.startWait);
         yield return new WaitForSeconds(patternsOP.startWait);
         while (true)//is paused entre phase ?
         {
+            Debug.Log("Chose next pattern");
+
             chosen = Choose(probs);
-            Debug.Log("test");
             currentOptions = patterns[chosen];//patterns is sorted
-            Debug.Log("test");
+            //Debug.Log("test");
             Debug.Log("patterns count: "+ patterns.Count);
 
             Debug.Log("prob : " + chosen);
@@ -175,12 +213,13 @@ public class SunBehavior : MonoBehaviour {
 
             if(currentOptions.cooldown > 0)
             {
-                IEnumerator coo = cooldown(currentOptions.cooldown, chosen, probs[chosen]);
-                cooldowns.Add(coo);
-                StartCoroutine(coo);
+                //IEnumerator coo = cooldown(currentOptions.cooldown, chosen, probs[chosen]);
+                //cooldowns.Add(coo);
+                Debug.Log("launch cooldown: "+ currentOptions.cooldown);
+                cooldowns.Add(StartCoroutine(cooldown(currentOptions.cooldown, chosen, probs[chosen])));
                 probs[chosen] = 0f;
             }
-
+            Debug.Log("timeWait: " + timeWait);
             yield return new WaitForSeconds(timeWait);
             
             if(currentPattern == null)
@@ -188,42 +227,82 @@ public class SunBehavior : MonoBehaviour {
                 Debug.Log("wtf null");
             }
             currentPattern.EndPattern();
+            Debug.Log("Devient null");
             currentPattern = null;
 
             waitAfter = patternsOP.waveWait;//Time before new pattern selected
             if(currentOptions.waitAfter > 0)
                 waitAfter = currentOptions.waitAfter;
-
+            Debug.Log("wait after: " + waitAfter);
             yield return new WaitForSeconds(waitAfter);
         }
     }
 
-    private void onChangingPhase()
-    {
-        updateReferences();
-        cleanCooldowns();
-        StartCoroutine(launchSelectingPatterns(sunOP.pauseTimeBetweenPhase));
-    }
-
     private void cleanCooldowns()
     {
-        foreach(IEnumerator coo in cooldowns)
+        foreach(Coroutine coo in cooldowns)
         {
             StopCoroutine(coo);
         }
     }
 
+
+    
+
+    private void onChangingPhase()
+    {
+        updateReferences();
+        cleanCooldowns();
+
+        //StopCoroutine(coroutine);
+        //StartCoroutine(coroutine);
+
+        if (launchSelecting != null)
+        {
+            StopCoroutine(launchSelecting);
+        }
+
+        Debug.Log("stop coroutine");
+        if (lastRoutine != null)
+        {
+            StopCoroutine(lastRoutine);
+        }
+        if (currentPattern != null)
+        {
+            Debug.Log("force ending pattern");
+            currentPattern.EndPattern();
+            currentPattern = null;
+        }
+
+        launchSelecting = StartCoroutine(launchSelectingPatterns(sunOP.pauseTimeBetweenPhase));
+    }
+
     private IEnumerator launchSelectingPatterns(float timePaused)
     {
-        Debug.Log("phased changed, launch selecting patterns or paused it");
-        StopCoroutine(coroutine);
+        Debug.Log("phased changed, launch selecting patterns or paused it for: " + timePaused);
+        /*Debug.Log("stop coroutine");
+        if (lastRoutine != null)
+        {
+            StopCoroutine(lastRoutine);
+        }
+        if (currentPattern != null)
+        {
+            Debug.Log("force ending pattern");
+            currentPattern.EndPattern();
+            currentPattern = null;
+        }
+        */
         yield return new WaitForSeconds(timePaused);
-        StartCoroutine(coroutine);
+        Debug.Log("start coroutine");
+        //StartCoroutine(coroutine);
+        lastRoutine = StartCoroutine(SelectingPaterns());
     }
+    
 
     private IEnumerator cooldown(float cooldown, int index, float initTime)
     {
         yield return new WaitForSeconds(cooldown);
+        Debug.Log("coooldown over");
         probs[index] = initTime;
     }
     
