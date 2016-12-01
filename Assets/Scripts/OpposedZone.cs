@@ -23,4 +23,15 @@ public class OpposedZone : MonoBehaviour {
             GameObject.Find("Senpai").SendMessage("OnP2EnterOpposed");
         }
     }
+    void OnTriggerExit2D(Collider2D other)
+    {
+        if (other.gameObject.name == "Player1")
+        {
+            GameObject.Find("Senpai").SendMessage("OnP1ExitOpposed");
+        }
+        if (other.gameObject.name == "Player2")
+        {
+            GameObject.Find("Senpai").SendMessage("OnP2ExitOpposed");
+        }
+    }
 }
