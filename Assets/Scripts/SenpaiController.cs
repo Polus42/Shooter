@@ -14,10 +14,15 @@ public class SenpaiController : MonoBehaviour {
     private int _currentdirection;
     private int _health;
     private string _whatimsaying = "";
+    public int pointsOnDestroyProjectile = 1;
+    public int pointsOnWeakpointDestroyed = 100;
     // Paramètres missions
     public float missionTime = 10;
     public float missionTextTime = 5;
     public int PF_lost = 100;
+    public float minTimeBetweenMission = 4;
+    public float maxTimeBetweenMission = 6;
+    public int pointsLostOnTouchSenpai = 100;
     // to check if a mission is currently launched
     private bool _MissionDestroyWeakpoint = false;
     public string destroyWeakpointPhrase = "";
@@ -49,7 +54,7 @@ public class SenpaiController : MonoBehaviour {
     // Use this for initialization
     void Start () {
 	    _health = startingHealth;
-        //startMissionDestroyWeakpoint(10);
+        StartCoroutine(startMissionSystem());
 	}
 	
 	// Update is called once per frame
@@ -70,7 +75,7 @@ public class SenpaiController : MonoBehaviour {
         transform.rotation = Quaternion.Euler(0f, 0f, rot_z +90);
         GameObject.Find("OpposedZoneAnchor").transform.rotation = Quaternion.Euler(0f, 0f, rot_z );
 
-        startRandomMission();
+        updateFace();
     }
     void updateFace()
     {
@@ -145,9 +150,9 @@ public class SenpaiController : MonoBehaviour {
         if (_MissionDestroyWeakpoint)
         {
             if (GameObject.Find("Player1") != null)
-                GameObject.Find("Player1").GetComponent<PlayerBehavior>()._PF += 100;
+                GameObject.Find("Player1").GetComponent<PlayerBehavior>()._PF += pointsOnWeakpointDestroyed;
             if (GameObject.Find("Player2")!= null)
-                GameObject.Find("Player2").GetComponent<PlayerBehavior>()._PF += 100;
+                GameObject.Find("Player2").GetComponent<PlayerBehavior>()._PF += pointsOnWeakpointDestroyed;
             _MissionDestroyWeakpoint = false;
         }
     }
@@ -156,9 +161,9 @@ public class SenpaiController : MonoBehaviour {
         if (_MissionDestroyWeakpoint)
         {
             if (GameObject.Find("Player1") != null)
-                GameObject.Find("Player1").GetComponent<PlayerBehavior>()._PF += 100;
+                GameObject.Find("Player1").GetComponent<PlayerBehavior>()._PF += pointsOnWeakpointDestroyed;
             if (GameObject.Find("Player2") != null)
-                GameObject.Find("Player2").GetComponent<PlayerBehavior>()._PF += 100;
+                GameObject.Find("Player2").GetComponent<PlayerBehavior>()._PF += pointsOnWeakpointDestroyed;
             _MissionDestroyWeakpoint = false;
         }
     }
@@ -392,12 +397,31 @@ public class SenpaiController : MonoBehaviour {
     void OnP1DestroyProjectile()
     {
         if (GameObject.Find("Player1") != null)
-            GameObject.Find("Player1").GetComponent<PlayerBehavior>()._PF += 1;
+            GameObject.Find("Player1").GetComponent<PlayerBehavior>()._PF += pointsOnDestroyProjectile;
     }
     void OnP2DestroyProjectile()
     {
         if (GameObject.Find("Player2") != null)
-            GameObject.Find("Player2").GetComponent<PlayerBehavior>()._PF += 1;
+            GameObject.Find("Player2").GetComponent<PlayerBehavior>()._PF += pointsOnDestroyProjectile;
+    }
+    //////////////////////////////////////////////////////////////////////
+    // When player touch Senpaiiiii
+    void OnCollisionEnter2D(Collision2D coll)
+    {
+        if (coll.gameObject.GetComponent<PlayerProjectile>() != null)
+        {
+            Destroy(coll.gameObject);
+            if (coll.gameObject.GetComponent<PlayerProjectile>().launchedby == "P1")
+            {
+                if (GameObject.Find("Player1") != null)
+                    GameObject.Find("Player1").GetComponent<PlayerBehavior>()._PF -= pointsLostOnTouchSenpai;
+            }
+            else
+            {
+                if (GameObject.Find("Player2") != null)
+                    GameObject.Find("Player2").GetComponent<PlayerBehavior>()._PF -= pointsLostOnTouchSenpai;
+            }
+        }
     }
     //////////////////////////////////////////////////////////////////////
     void startRandomMission()
@@ -425,6 +449,14 @@ public class SenpaiController : MonoBehaviour {
             {
                 startMissionStopFireing(missionTime);
             }
+        }
+    }
+    IEnumerator startMissionSystem()
+    {
+        while(true)
+        {
+            yield return new WaitForSeconds(Random.Range(minTimeBetweenMission, maxTimeBetweenMission));
+            startRandomMission();
         }
     }
 }
