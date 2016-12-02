@@ -77,6 +77,11 @@ public class RotationPattern : IPattern
         
         foreach (GameObject go in bullets)
         {
+            if (go == null || !go.activeSelf)
+            {
+                bullets.Remove(go);
+                continue;
+            }
             go.transform.RotateAround(Vector3.zero, new Vector3(0,0,1), options.rotatingSpeed * Time.deltaTime);
         }
     }
@@ -85,10 +90,15 @@ public class RotationPattern : IPattern
     {
         foreach (GameObject go in bullets)
         {
-            if (!go.activeSelf)
+            if (go == null || !go.activeSelf)
+            {
+                bullets.Remove(go);
                 continue;
+            }
             go.GetComponent<Rigidbody2D>().isKinematic = false;
             go.GetComponent<Rigidbody2D>().AddForce((go.transform.position - sb.transform.position) * options.bulletSpeed * sb.force);
+            //go.GetComponent<Rigidbody2D>().AddForce(go.transform.forward * options.bulletSpeed * sb.force);
+
             //Cool    
             /*Vector3 test = (go.transform.position - sb.transform.position);
             test.x *= -1;
@@ -105,9 +115,9 @@ public class RotationPattern : IPattern
         {
             Vector3 thispos = new Vector3(count * options.radius, count * options.radius, 0);
             thispos = Quaternion.Euler(0, 0, currentAngle) * thispos;
-            lastBullet = GamePool.GetNextObject(sb.typeProjectiles[0], sb.transform.position + thispos, Quaternion.identity);
+            //lastBullet = GamePool.GetNextObject(sb.typeProjectiles[0], sb.transform.position + thispos, Quaternion.identity);
             //Debug.Log("is active? " + lastBullet.gameObject.activeSelf);
-            //lastBullet = (GameObject) GameObject.Instantiate(sb.typeProjectiles[0], sb.transform.position + thispos, Quaternion.identity);
+            lastBullet = (GameObject) GameObject.Instantiate(sb.typeProjectiles[0], sb.transform.position + thispos, Quaternion.identity);
             lastBullet.GetComponent<ProjectileBehavior>().launchedby = "sun";
             bullets.Add(lastBullet);
             currentAngle += (float) 360 / options.numberHelixes;
@@ -119,6 +129,11 @@ public class RotationPattern : IPattern
             addForce = true;
             foreach(GameObject go in bullets)
             {
+                if(go == null || !go.activeSelf)
+                {
+                    bullets.Remove(go);
+                    continue;
+                }
                 go.GetComponent<Rigidbody2D>().isKinematic = true;
                 //go.GetComponent<Rigidbody2D>().AddTorque(360, ForceMode2D.Impulse); //go.transform.position * speed_multiplier
             }

@@ -58,13 +58,15 @@ public class WavePattern : IPattern
             thispos = Quaternion.Euler(0, 0, currentAngle) * thispos;
             speed_multiplier = options.bulletspeed * sb.force;
             speed_multiplier = (numberLoop % 2 == 0) ? speed_multiplier : options.multiplicatorSpeed * speed_multiplier;
-            //GameObject go = (GameObject)GameObject.Instantiate((numberLoop % 2 == 0) ? sb.typeProjectiles[0] : sb.typeProjectiles[1], sb.transform.position + thispos, Quaternion.identity);
             GameObject proj;
             if (options.forceAType > -1)
                 proj = sb.typeProjectiles[options.forceAType];
             else
                 proj = (numberLoop % 2 == 0) ? sb.typeProjectiles[0] : sb.typeProjectiles[1];
-            GameObject go = GamePool.GetNextObject(proj, sb.transform.position + thispos, Quaternion.identity);
+
+            //GameObject go = GamePool.GetNextObject(proj, sb.transform.position + thispos, Quaternion.identity);
+            GameObject go = (GameObject)GameObject.Instantiate((numberLoop % 2 == 0) ? sb.typeProjectiles[0] : sb.typeProjectiles[1], sb.transform.position + thispos, Quaternion.identity);
+
             go.GetComponent<ProjectileBehavior>().launchedby = "sun";
             go.GetComponent<Rigidbody2D>().AddForce(thispos * speed_multiplier);
             //go.GetComponent<Rigidbody2D>().velocity = thispos * speed_multiplier;

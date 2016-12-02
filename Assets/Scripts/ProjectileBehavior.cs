@@ -18,7 +18,8 @@ public class ProjectileBehavior : MonoBehaviour {
         {
             //Debug.Log("projectile hors ecran");
             //Destroy(gameObject);
-            this.gameObject.SetActive(false);
+            //this.gameObject.SetActive(false);
+            Destroy(gameObject);
         }
         transform.Rotate(new Vector3(0,0,1));
             
@@ -31,7 +32,8 @@ public class ProjectileBehavior : MonoBehaviour {
             _health--;
             if (_health <= 0)
             {
-                gameObject.SetActive(false);
+                //gameObject.SetActive(false);
+                Destroy(gameObject);
                 if (other.gameObject.GetComponent<PlayerProjectile>().launchedby == "P1")
                 {
                     GameObject.Find("Senpai").SendMessage("OnP1DestroyProjectile");
@@ -53,7 +55,7 @@ public class ProjectileBehavior : MonoBehaviour {
         //var exp = GetComponent<ParticleSystem>();
         //exp.Play();
         //Destroy(gameObject);//, exp.duration);
-        this.gameObject.SetActive(false);
+        //this.gameObject.SetActive(false);
     }
 
 }
