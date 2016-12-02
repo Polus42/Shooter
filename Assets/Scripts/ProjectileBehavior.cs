@@ -3,36 +3,59 @@ using System.Collections;
 
 public class ProjectileBehavior : MonoBehaviour {
     public string launchedby;
-	// Use this for initialization
-	void Start () {
+    public int _health = 1;
+    private Renderer red;
 
+
+    // Use this for initialization
+    void Start () {
+        red = GetComponent<Renderer>();
     }
 	
 	// Update is called once per frame
 	void Update () {
-	    
+        if (!red.isVisible)
+        {
+            //Debug.Log("projectile hors ecran");
+            //Destroy(gameObject);
+            //this.gameObject.SetActive(false);
+            Destroy(gameObject);
+        }
+        transform.Rotate(new Vector3(0,0,1));
+            
 	}
-    void OnCollisionEnter2D(Collision2D coll)
+    void OnTriggerEnter2D(Collider2D other)
     {
-        if (coll.collider.tag == "Player")
+        if (other.gameObject.GetComponent<PlayerProjectile>() != null)
         {
-            coll.gameObject.SendMessage("ApplyDamage", 1);
-            Explode();
+            Destroy(other.gameObject);
+            _health--;
+            if (_health <= 0)
+            {
+                //gameObject.SetActive(false);
+                Destroy(gameObject);
+                if (other.gameObject.GetComponent<PlayerProjectile>().launchedby == "P1")
+                {
+                    GameObject.Find("Senpai").SendMessage("OnP1DestroyProjectile");
+                }
+                else
+                {
+                    GameObject.Find("Senpai").SendMessage("OnP2DestroyProjectile");
+                }
+            }
         }
-        if (coll.collider.tag == "WeakPoint")
+        else if(other.gameObject.GetComponent<PlayerBehavior>() != null)
         {
-            coll.gameObject.SendMessage("ApplyDamage", 1);
-            Explode();
-        }
-        if (coll.collider.name == "Shield")
-        {
+            other.gameObject.SendMessage("ApplyDamage",1);
             Destroy(gameObject);
         }
     }
     void Explode()
     {
-        var exp = GetComponent<ParticleSystem>();
-        exp.Play();
-        Destroy(gameObject, exp.duration);
+        //var exp = GetComponent<ParticleSystem>();
+        //exp.Play();
+        //Destroy(gameObject);//, exp.duration);
+        //this.gameObject.SetActive(false);
     }
+
 }

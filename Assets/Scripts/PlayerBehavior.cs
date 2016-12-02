@@ -24,6 +24,8 @@ public class PlayerBehavior : MonoBehaviour {
     private float _boostTime;
     private int _rotateSpeed;
     private float _shieldTime;
+    private AudioSource[] _audioSources;
+    private bool _shield = false;
     // Use this for initialization
     void Start () {
         // assigning cursor
@@ -35,6 +37,8 @@ public class PlayerBehavior : MonoBehaviour {
         _rotateSpeed = initialSpeed;
         _shieldTime = 0;
         transform.GetChild(3).gameObject.SetActive(false);
+        // Audio
+        _audioSources = GetComponents<AudioSource>();
     }
 	
 	// Update is called once per frame
@@ -61,8 +65,16 @@ public class PlayerBehavior : MonoBehaviour {
     }
     void shoot()
     {
+        GameObject.Find("Senpai").SendMessage("On"+playerPrefix+"shoot");
+        _audioSources[0].Play();
         GameObject go = (GameObject)Object.Instantiate(projectile[0], transform.position, Quaternion.identity);
-        go.GetComponent<ProjectileBehavior>().launchedby = playerPrefix;
+        go.GetComponent<PlayerProjectile>().launchedby = playerPrefix;
+        // lookatthecursor
+        Vector3 diff = _cursor.transform.position - transform.position;
+        diff.Normalize();
+        float rot_z = Mathf.Atan2(diff.y, diff.x) * Mathf.Rad2Deg;
+        go.transform.rotation = Quaternion.Euler(0f, 0f, rot_z);
+
         if (playerPrefix == "P1")
         {
             go.layer = 8;
@@ -75,10 +87,14 @@ public class PlayerBehavior : MonoBehaviour {
     }
     void ApplyDamage(int amount)
     {
-        _health -= amount;
-        if (_health<=0)
+        GetComponents<AudioSource>()[3].Play();
+        if (!_shield)
         {
-            Destroy(gameObject);
+            _health -= amount;
+            if (_health <= 0)
+            {
+                Destroy(gameObject);
+            }
         }
     }
     // Actions spéciales ///////////////////////////////////////
@@ -87,21 +103,57 @@ public class PlayerBehavior : MonoBehaviour {
     {
         if (_boostTime==0)
         {
-            _rotateSpeed += speedBonus;
+            if (_rotateSpeed<0)
+            {
+                _rotateSpeed -= speedBonus;
+            }
+            else
+            {
+                _rotateSpeed += speedBonus;
+            }
             StartCoroutine(initSpeed());
            _boostTime = boostReloadTime;
         }
     }
+    public void slow(float factor)
+    {
+        _rotateSpeed = _rotateSpeed / 2;
+        StartCoroutine(initSpeedUntil(10));
+    }
+    IEnumerator initSpeedUntil(float time)
+    {
+        _audioSources[2].Play();
+        yield return new WaitForSeconds(time);
+        if (_rotateSpeed < 0)
+        {
+            _rotateSpeed = -initialSpeed;
+        }
+        else
+        {
+            _rotateSpeed = initialSpeed;
+        }
+        _audioSources[2].Pause();
+    }
     IEnumerator initSpeed()
     {
+        _audioSources[2].Play();
         yield return new WaitForSeconds(boostTime);
-        _rotateSpeed = initialSpeed;
+        if (_rotateSpeed<0)
+        {
+            _rotateSpeed = -initialSpeed;
+        }
+        else
+        {
+            _rotateSpeed = initialSpeed;
+        }
+        _audioSources[2].Pause();
     }
     // Shield
     void shield()
     {
         if (_shieldTime==0)
         {
+            _shield = true;
             transform.GetChild(3).gameObject.SetActive(true);
             StartCoroutine(initShield());
             _shieldTime = shieldReloadTime;
@@ -109,8 +161,11 @@ public class PlayerBehavior : MonoBehaviour {
     }
     IEnumerator initShield()
     {
+        _audioSources[1].Play();
         yield return new WaitForSeconds(shieldTime);
+        _shield = false;
         transform.GetChild(3).gameObject.SetActive(false);
+        _audioSources[1].Stop();
     }
     void checkInput()
     {

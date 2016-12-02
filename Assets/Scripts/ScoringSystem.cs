@@ -9,8 +9,8 @@ public class ScoringSystem : MonoBehaviour {
     private PlayerBehavior _p2;
     // Use this for initialization
     void Start () {
-        _PF_P1_text = GameObject.Find("PF P1").GetComponent<Text>();
-        _PF_P2_text = GameObject.Find("PF P2").GetComponent<Text>();
+        _PF_P1_text = GameObject.Find("P1_PF").GetComponent<Text>();
+        _PF_P2_text = GameObject.Find("P2_PF").GetComponent<Text>();
         _p1 = GameObject.Find("Player1").GetComponent<PlayerBehavior>();
         _p2 = GameObject.Find("Player2").GetComponent<PlayerBehavior>();
     }

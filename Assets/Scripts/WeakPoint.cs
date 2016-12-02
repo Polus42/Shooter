@@ -2,22 +2,65 @@
 using System.Collections;
 
 public class WeakPoint : MonoBehaviour {
+    private OptionsHolder.SunOP sunOP;
+
     private int _health;
-    public int startinghealth;
+    //public int startinghealth;
 	// Use this for initialization
+
+    void Awake()
+    {
+        //Debug.Log("Awake weak point");
+        //EventManager.StartListening("OnCounterPhase", Awakening);
+        
+    }
+    
 	void Start () {
-        _health = startinghealth;
-	}
+        //Awakening();
+        //startinghealth = sunOP.weakPointHealth;
+        //_health = startinghealth;
+    }
 	
 	// Update is called once per frame
 	void Update () {
-	    if (_health<=0)
-        {
-            Destroy(gameObject);
-        }
+
 	}
-    void ApplyDamage(int howmany)
+
+    void OnEnable()
     {
-        _health -= howmany;
+        Awakening();
     }
+
+    private void Awakening()
+    {
+        //this.gameObject.SetActive(true);
+        Debug.Log("weak point awakening");
+        OptionsManager.Instance.getSunOptions(out sunOP);
+        _health = sunOP.weakPointHealth;
+
+        //Test only
+        this.gameObject.SetActive(false);
+        EventManager.TriggerEvent("WeakPointDestroyed");
+    }
+    void OnTriggerEnter2D(Collider2D other)
+    {
+        if (other.gameObject.GetComponent<PlayerProjectile>() != null)
+        {
+            _health--;
+            if (_health<=0)
+            {
+                this.gameObject.SetActive(false);
+                if (other.gameObject.GetComponent<PlayerProjectile>().launchedby == "P1")
+                {
+                    GameObject.Find("Senpai").SendMessage("OnP1DestroyWeakpoint");
+                }
+                else
+                {
+                    GameObject.Find("Senpai").SendMessage("OnP2DestroyWeakpoint");
+                }
+                EventManager.TriggerEvent("WeakPointDestroyed");
+            }
+        }
+    }
+
 }
