@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System;
+using System.Collections.Generic;
 
 public class RotationPattern : IPattern
 {
@@ -9,7 +10,7 @@ public class RotationPattern : IPattern
     private float counter = 0;
     private float counterDirection = 0;
     private bool haveChangedDirection = false;
-    private ArrayList bullets;
+    private List<GameObject> bullets;
     private bool addForce = false;
     private float currentAngle;
     private int count = 1;
@@ -30,7 +31,7 @@ public class RotationPattern : IPattern
     public RotationPattern(SunBehavior sb)
     {
         this.sb = sb;
-        bullets = new ArrayList();
+        bullets = new List<GameObject>();
     }
 
     public void setOptions(OptionsHolder.IOptionPattern options)
@@ -74,12 +75,25 @@ public class RotationPattern : IPattern
                 haveChangedDirection = true;
             }
         }
-        
+
+        /*
+        for (int i = bullets.Count - 1; i >= 0; i--)
+        {
+            GameObject go = bullets[i];
+            if (go == null || !go.activeSelf)
+            {
+                bullets.RemoveAt(i);
+                continue;
+            }
+            go.transform.RotateAround(Vector3.zero, new Vector3(0, 0, 1), options.rotatingSpeed * Time.deltaTime);
+        }
+        */
+       
         foreach (GameObject go in bullets)
         {
             if (go == null || !go.activeSelf)
             {
-                bullets.Remove(go);
+                //bullets.Remove(go);
                 continue;
             }
             go.transform.RotateAround(Vector3.zero, new Vector3(0,0,1), options.rotatingSpeed * Time.deltaTime);
@@ -92,7 +106,7 @@ public class RotationPattern : IPattern
         {
             if (go == null || !go.activeSelf)
             {
-                bullets.Remove(go);
+                //bullets.Remove(go);
                 continue;
             }
             go.GetComponent<Rigidbody2D>().isKinematic = false;
@@ -117,7 +131,7 @@ public class RotationPattern : IPattern
             thispos = Quaternion.Euler(0, 0, currentAngle) * thispos;
             //lastBullet = GamePool.GetNextObject(sb.typeProjectiles[0], sb.transform.position + thispos, Quaternion.identity);
             //Debug.Log("is active? " + lastBullet.gameObject.activeSelf);
-            lastBullet = (GameObject) GameObject.Instantiate(sb.typeProjectiles[0], sb.transform.position + thispos, Quaternion.identity);
+            lastBullet = (GameObject) GameObject.Instantiate(sb.typeProjectiles[1], sb.transform.position + thispos, Quaternion.identity);
             lastBullet.GetComponent<ProjectileBehavior>().launchedby = "sun";
             bullets.Add(lastBullet);
             currentAngle += (float) 360 / options.numberHelixes;
@@ -131,7 +145,7 @@ public class RotationPattern : IPattern
             {
                 if(go == null || !go.activeSelf)
                 {
-                    bullets.Remove(go);
+                    //bullets.Remove(go);
                     continue;
                 }
                 go.GetComponent<Rigidbody2D>().isKinematic = true;

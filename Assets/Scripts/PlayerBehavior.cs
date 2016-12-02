@@ -18,6 +18,7 @@ public class PlayerBehavior : MonoBehaviour {
     public int _PF = 0;
     public bool viseeAuto = false;
     // Private attributes
+    private  bool vulnerable = true;
     private int _health;
     private Transform _cursor_center;
     private Transform _cursor;
@@ -88,15 +89,29 @@ public class PlayerBehavior : MonoBehaviour {
     void ApplyDamage(int amount)
     {
         GetComponents<AudioSource>()[3].Play();
-        if (!_shield)
+        if (!_shield && vulnerable)
         {
             _health -= amount;
             if (_health <= 0)
             {
                 Destroy(gameObject);
             }
+            else
+            {
+                vulnerable = false;
+                StartCoroutine(noVulnerable());
+            }
         }
     }
+
+    
+
+    IEnumerator noVulnerable()
+    {
+        yield return new WaitForSeconds(1f);
+        vulnerable = true;
+    }
+
     // Actions spéciales ///////////////////////////////////////
     // Boost
     void boost()
