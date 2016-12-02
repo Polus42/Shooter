@@ -52,8 +52,8 @@ public class CyclicPattern : IPattern
         for (int i = 0; i < options.count; i++)
         {
             Vector3 thispos = new Vector3(options.radius * (float) Math.Sin(currentAngle), options.radius * (float) Math.Cos(currentAngle) * options.mult, 0);
-            GameObject go = GamePool.GetNextObject(sb.typeProjectiles[0], sb.transform.position + thispos, Quaternion.identity);
-            //GameObject go = (GameObject)Instantiate(sb.typeProjectiles[0], sb.transform.position + thispos, Quaternion.identity);
+            //GameObject go = GamePool.GetNextObject(sb.typeProjectiles[0], sb.transform.position + thispos, Quaternion.identity);
+            GameObject go = (GameObject)GameObject.Instantiate(sb.typeProjectiles[0], sb.transform.position + thispos, Quaternion.identity);
             go.GetComponent<ProjectileBehavior>().launchedby = "sun";
             go.GetComponent<Rigidbody2D>().AddForce(thispos * speed_multiplier);
             currentAngle += (2 * (float) Math.PI) / options.count;

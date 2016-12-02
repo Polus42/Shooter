@@ -17,7 +17,7 @@
 		"PatternsOptions": {
 			"startWait": 3,//Start waiting time (in addition of pauseTimeBetweenPhase)
 			"waveWait":10,//waiting time before selecting new pattern
-			"nextWait":10//general duration for all pattern
+			"nextWait":10,//general duration for all pattern
 		},
 		"Patterns": {//patterns used for difficulty 1
 			"SurvivalPhase": {
@@ -48,7 +48,7 @@
 				},
 				"WavePattern" : { //OK
 					"name": "WavePattern",
-					"probability": 1,
+					"probability": 0,
 					"cooldown": 0,
 					"frequency": 0.5,
 					"angleAdd": 360,
@@ -61,6 +61,18 @@
 					"angleWillVariateIntern":true,
 					"chaosOn": false,
 					"forceAType":-1
+				},
+				"CyclicPattern_V1" : { //OK
+					"name": "CyclicPattern",
+					"probability": 1,
+					"cooldown": 30,
+					"angle": 1,
+					"frequency": 0.3,
+					"mult": 1,
+					"radius": 0.4,
+					"count": 10,
+					"bulletspeed": 1.5,
+					"angleVariation": -2,//negatif pour inverser
 				}
 			},
 			"CounterPhase": {
