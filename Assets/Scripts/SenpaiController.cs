@@ -129,9 +129,11 @@ public class SenpaiController : MonoBehaviour {
     }
     IEnumerator initSaying(float time,string text)
     {
+        Time.timeScale = 0.1f;
         _whatimsaying =text;
-        yield return new WaitForSeconds(time);
+        yield return new WaitForSeconds(time*0.1f);
         _whatimsaying = "";
+        Time.timeScale = 1;
     }
     // Missions d'entraide ///////////////////////////////////
     // Misssion Destroy Weakpoint ///////////////////////////////////
