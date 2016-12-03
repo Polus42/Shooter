@@ -18,7 +18,7 @@ public class SenpaiController : MonoBehaviour {
     public int pointsOnWeakpointDestroyed = 100;
     // Paramètres missions
     public float missionTime = 10;
-    public float missionTextTime = 1.5;
+    public float missionTextTime = 1.5f;
     public int PF_lost = 100;
     public float minTimeBetweenMission = 4;
     public float maxTimeBetweenMission = 6;
