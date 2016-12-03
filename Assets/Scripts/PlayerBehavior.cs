@@ -27,6 +27,8 @@ public class PlayerBehavior : MonoBehaviour {
     private float _shieldTime;
     private AudioSource[] _audioSources;
     private bool _shield = false;
+    public GameObject particles;
+
     // Use this for initialization
     void Start () {
         // assigning cursor
@@ -116,6 +118,8 @@ public class PlayerBehavior : MonoBehaviour {
     // Boost
     void boost()
     {
+        particles.SetActive(true);
+
         if (_boostTime==0)
         {
             if (_rotateSpeed<0)
@@ -153,6 +157,7 @@ public class PlayerBehavior : MonoBehaviour {
     {
         _audioSources[2].Play();
         yield return new WaitForSeconds(boostTime);
+        particles.SetActive(false);
         if (_rotateSpeed<0)
         {
             _rotateSpeed = -initialSpeed;
