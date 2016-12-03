@@ -18,7 +18,7 @@ public class SenpaiController : MonoBehaviour {
     public int pointsOnWeakpointDestroyed = 100;
     // Paramètres missions
     public float missionTime = 10;
-    public float missionTextTime = 5;
+    public float missionTextTime = 1;
     public int PF_lost = 100;
     public float minTimeBetweenMission = 4;
     public float maxTimeBetweenMission = 6;
@@ -51,11 +51,16 @@ public class SenpaiController : MonoBehaviour {
     // Rancune
     private bool _rancuneP1 = false;
     private bool _rancuneP2 = false;
+
+
+    public GameObject greyBackground;
+
+
     // Use this for initialization
     void Start () {
 	    _health = startingHealth;
         StartCoroutine(startMissionSystem());
-	}
+    }
 	
 	// Update is called once per frame
 	void Update () {
@@ -126,6 +131,7 @@ public class SenpaiController : MonoBehaviour {
     {
         GetComponents<AudioSource>()[0].Play();
         StartCoroutine(initSaying(timelasting,whatisay));
+        greyBackground.SetActive(true);
     }
     IEnumerator initSaying(float time,string text)
     {
@@ -134,6 +140,7 @@ public class SenpaiController : MonoBehaviour {
         yield return new WaitForSeconds(time*0.1f);
         _whatimsaying = "";
         Time.timeScale = 1;
+        greyBackground.SetActive(false);
     }
     // Missions d'entraide ///////////////////////////////////
     // Misssion Destroy Weakpoint ///////////////////////////////////

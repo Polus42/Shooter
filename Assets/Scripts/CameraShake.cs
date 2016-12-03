@@ -3,9 +3,20 @@ using System.Collections;
 
 public class CameraShake : MonoBehaviour
 {
-	// Transform of the camera to shake. Grabs the gameObject's transform
-	// if null.
-	public Transform camTransform;
+    /*
+    Appeler ce script :
+        CameraShake cameraShake;
+
+    void Start () {
+        cameraShake = GameObject.Find("Main Camera").GetComponent<CameraShake>();
+        cameraShake.Shaking();
+		}
+        */
+
+
+    // Transform of the camera to shake. Grabs the gameObject's transform
+    // if null.
+    public Transform camTransform;
 	
 	// How long the object should shake for.
 	public float shakeDuration = 0f;
