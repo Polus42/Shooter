@@ -23,7 +23,7 @@ public class OptionsManager : Singleton<OptionsManager>
 
         //Eviter deux fois charger 1ere phase, startDifficulty et startPhase inutiles ?
         currentOptions.switchDifficulty(allOptions[startDifficulty]);
-        currentOptions.switchPhase(startPhase);
+        //currentOptions.switchPhase(startPhase);
 
 
         Debug.Log("init end");

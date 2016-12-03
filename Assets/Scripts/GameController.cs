@@ -38,7 +38,7 @@ public class GameController : MonoBehaviour {
             case "CounterPhase":
                 goToCounterPhase();
                 break;
-            case "AdaptionPhase":
+            case "AdaptationPhase":
                 goToAdaptationPhase();
                 break;
             default:

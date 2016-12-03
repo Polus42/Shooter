@@ -67,6 +67,8 @@ public class SunBehavior : MonoBehaviour {
         //Take damage or not
         EventManager.StartListening("OnSurvivalPhase", goVulnerable);
         EventManager.StartListening("OnCounterPhase", goInvicible);
+        EventManager.StartListening("OnCounterPhase", growWeakPoint); 
+        EventManager.StartListening("OnAdaptationPhase", goInvicible);
 
         //Pause between each phase
         EventManager.StartListening("OnSurvivalPhase", onChangingPhase);
@@ -103,7 +105,10 @@ public class SunBehavior : MonoBehaviour {
         Debug.Log("go invicible");
         //cc.enabled = false;
         block = true;
+    }
 
+    private void growWeakPoint()
+    {
         Debug.Log("weak point name: " + weakPoint.name);
         weakPoint.gameObject.SetActive(true);
     }

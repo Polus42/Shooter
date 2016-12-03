@@ -1,5 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
+using UnityEngine.Events;
 
 public class SenpaiController : MonoBehaviour {
     public int rotateSpeed;
@@ -55,11 +57,53 @@ public class SenpaiController : MonoBehaviour {
 
     public GameObject greyBackground;
 
+    List<List<UnityAction>> missionsAvailable;
+    List<UnityAction> currentMissions;
+    UnityAction lastMission = null;
+
+    private Coroutine currentCoroutineMission;
+
+    void Awake()
+    {
+        // Declare the list of missions per phase
+        missionsAvailable = new List<List<UnityAction>>();
+        missionsAvailable.Add(new List<UnityAction>());
+        missionsAvailable.Add(new List<UnityAction>());
+        missionsAvailable.Add(new List<UnityAction>());
+
+        // Add two delegates to the list that point to missions
+        //Survival Phase
+        missionsAvailable[0].Add(() => startMissionStayNearMe(missionTime));
+        missionsAvailable[0].Add(() => startMissionGetAway(missionTime));
+        missionsAvailable[0].Add(() => startMissionStopFireing(missionTime));
+        missionsAvailable[0].Add(() => startMissionAttackSun(missionTime));
+        //Counter Phase
+        missionsAvailable[1].Add(() => startMissionDestroyWeakpoint(missionTime));
+        missionsAvailable[1].Add(() => startMissionStayNearMe(missionTime));
+        missionsAvailable[1].Add(() => startMissionGetAway(missionTime));
+        missionsAvailable[1].Add(() => startMissionStopFireing(missionTime));
+        //Adaptation Phase
+        missionsAvailable[2].Add(() => startMissionStayNearMe(missionTime));
+        missionsAvailable[2].Add(() => startMissionGetAway(missionTime));
+        missionsAvailable[2].Add(() => startMissionStopFireing(missionTime));
+
+        EventManager.StartListening("OnSurvivalPhase", () => switchPhase(0));
+        EventManager.StartListening("OnCounterPhase", () => switchPhase(1));
+        EventManager.StartListening("OnAdaptationPhase", () => switchPhase(2));
+    }
 
     // Use this for initialization
-    void Start () {
-	    _health = startingHealth;
+    void Start() {
+        _health = startingHealth;
         StartCoroutine(startMissionSystem());
+    }
+
+    private void switchPhase(int index)
+    {
+        Debug.Log("senpai change phase");
+        stopCurrentMission();
+        lastMission = null; //prob possible ici ?
+        currentMissions = missionsAvailable[index];
     }
 	
 	// Update is called once per frame
@@ -87,6 +131,7 @@ public class SenpaiController : MonoBehaviour {
         if (_rancuneP1 || _rancuneP2)
         {
             GetComponent<SpriteRenderer>().sprite = angrySprite;
+            //message de caprice ratée
         }
         else
         {
@@ -148,7 +193,7 @@ public class SenpaiController : MonoBehaviour {
     {
         _MissionDestroyWeakpoint = true;
         say(destroyWeakpointPhrase, missionTextTime);
-        StartCoroutine(checkMissionDestroyWeakpoint(tempsmission));
+        currentCoroutineMission = StartCoroutine(checkMissionDestroyWeakpoint(tempsmission));
     }
     IEnumerator checkMissionDestroyWeakpoint(float temps)
     {
@@ -182,7 +227,7 @@ public class SenpaiController : MonoBehaviour {
     {
         _MissionAttackSun = true;
         say(attackSunPhrase, missionTextTime);
-        StartCoroutine(checkMissionAttackSun(tempsmission));
+        currentCoroutineMission = StartCoroutine(checkMissionAttackSun(tempsmission));
     }
     IEnumerator checkMissionAttackSun(float temps)
     {
@@ -225,7 +270,7 @@ public class SenpaiController : MonoBehaviour {
     {
         _MissionStayNearMe = true;
         say(staynearmePhrase, missionTextTime);
-        StartCoroutine(checkMissionStayNearMe(tempsmission));
+        currentCoroutineMission = StartCoroutine(checkMissionStayNearMe(tempsmission));
     }
     IEnumerator checkMissionStayNearMe(float temps)
     {
@@ -289,7 +334,7 @@ public class SenpaiController : MonoBehaviour {
     {
         _MissionStopFireing = true;
         say(stopFireingPhrase, missionTextTime);
-        StartCoroutine(checkMissionStopFireing(tempsmission));
+        currentCoroutineMission = StartCoroutine(checkMissionStopFireing(tempsmission));
     }
     IEnumerator checkMissionStopFireing(float temps)
     {
@@ -336,7 +381,7 @@ public class SenpaiController : MonoBehaviour {
     {
         _MissionGetAway = true;
         say(getAwayPhrase, missionTextTime);
-        StartCoroutine(checkMissionGetAway(tempsmission));
+        currentCoroutineMission = StartCoroutine(checkMissionGetAway(tempsmission));
     }
     IEnumerator checkMissionGetAway(float temps)
     {
@@ -434,8 +479,46 @@ public class SenpaiController : MonoBehaviour {
         }
     }
     //////////////////////////////////////////////////////////////////////
+    void moveFront(UnityAction currentMission)//move item in list to front (index 0)
+    {
+        int currentIndex = currentMissions.IndexOf(currentMission);
+        if (currentIndex < 0)
+            return;
+        UnityAction item = currentMissions[currentMissions.IndexOf(currentMission)];
+        currentMissions.RemoveAt(currentIndex);
+        currentMissions.Insert(0, item);
+    }
+
+    void stopCurrentMission()
+    {
+        if(currentCoroutineMission != null)
+        {
+            StopCoroutine(currentCoroutineMission);
+            _MissionDestroyWeakpoint = _MissionAttackSun = _MissionGetAway = _MissionStopFireing = _MissionStayNearMe = false;
+        }
+    }
+
     void startRandomMission()
     {
+        if (_MissionDestroyWeakpoint || _MissionAttackSun || _MissionGetAway || _MissionStopFireing || _MissionStayNearMe)
+        {
+            return;
+        }
+
+        int mission;
+        if(lastMission != null)
+        {
+            moveFront(lastMission);
+            mission = Random.Range(1, currentMissions.Count);
+        }
+        else
+        {
+            mission = Random.Range(0, currentMissions.Count);
+        }
+        lastMission = currentMissions[mission];
+        lastMission.Invoke();
+
+        /*
         if (!_MissionDestroyWeakpoint && !_MissionAttackSun && !_MissionGetAway && !_MissionStopFireing && ! _MissionStayNearMe)
         {
             int mission = Random.Range(1,6);
@@ -460,6 +543,7 @@ public class SenpaiController : MonoBehaviour {
                 startMissionStopFireing(missionTime);
             }
         }
+        */
     }
     IEnumerator startMissionSystem()
     {

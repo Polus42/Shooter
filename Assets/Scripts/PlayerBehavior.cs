@@ -66,6 +66,7 @@ public class PlayerBehavior : MonoBehaviour {
     {
         transform.RotateAround(Vector3.zero, new Vector3(0, 0, 1), direction* _rotateSpeed * Time.deltaTime);
     }
+
     void shoot()
     {
         GameObject.Find("Senpai").SendMessage("On"+playerPrefix+"shoot");
@@ -106,8 +107,7 @@ public class PlayerBehavior : MonoBehaviour {
         }
     }
 
-    
-
+    //Invulnerable pendant 1sec
     IEnumerator noVulnerable()
     {
         yield return new WaitForSeconds(1f);
