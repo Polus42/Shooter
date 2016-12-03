@@ -54,7 +54,8 @@ public class SenpaiController : MonoBehaviour {
     private bool _rancuneP1 = false;
     private bool _rancuneP2 = false;
 
-
+    infoScore InfoScore;
+    
     public GameObject greyBackground;
 
     List<List<UnityAction>> missionsAvailable;
@@ -96,6 +97,8 @@ public class SenpaiController : MonoBehaviour {
     void Start() {
         _health = startingHealth;
         StartCoroutine(startMissionSystem());
+
+        InfoScore = GameObject.Find("Canvas").GetComponent<infoScore>();
     }
 
     private void switchPhase(int index)
@@ -209,6 +212,7 @@ public class SenpaiController : MonoBehaviour {
             if (GameObject.Find("Player2")!= null)
                 GameObject.Find("Player2").GetComponent<PlayerBehavior>()._PF += pointsOnWeakpointDestroyed;
             _MissionDestroyWeakpoint = false;
+            InfoScore.weakPointDestroyed_J1();
         }
     }
     void OnP2DestroyWeakpoint()
@@ -220,6 +224,7 @@ public class SenpaiController : MonoBehaviour {
             if (GameObject.Find("Player2") != null)
                 GameObject.Find("Player2").GetComponent<PlayerBehavior>()._PF += pointsOnWeakpointDestroyed;
             _MissionDestroyWeakpoint = false;
+            InfoScore.weakPointDestroyed_J2();
         }
     }
     // Misssion Attack sun ///////////////////////////////////
@@ -235,22 +240,34 @@ public class SenpaiController : MonoBehaviour {
         if (_playersTouchedSun[0] > SunAttackAmount)
         {
             if (GameObject.Find("Player1") != null)
+            {
                 GameObject.Find("Player1").GetComponent<PlayerBehavior>()._PF += 100;
+                InfoScore.missionReussie_J1();
+            }
         }
         else
         {
             if (GameObject.Find("Player1") != null)
+            {
                 GameObject.Find("Player1").GetComponent<PlayerBehavior>()._PF -= PF_lost;
+                InfoScore.missionFailure_J1();
+            }
         }
         if (_playersTouchedSun[1] > SunAttackAmount)
         {
             if (GameObject.Find("Player2") != null)
+            {
                 GameObject.Find("Player2").GetComponent<PlayerBehavior>()._PF += 100;
+                InfoScore.missionReussie_J2();
+            }
         }
         else
         {
             if (GameObject.Find("Player2") != null)
+            {
                 GameObject.Find("Player2").GetComponent<PlayerBehavior>()._PF -= PF_lost;
+                InfoScore.missionFailure_J2();
+            }
         }
         _playersTouchedSun[0] = 0;
         _playersTouchedSun[1] = 0;
@@ -278,22 +295,34 @@ public class SenpaiController : MonoBehaviour {
         if (Time.time - _P1Entered > stayCloseToMeTime)
         {
             if (GameObject.Find("Player1")!=null)
+            { 
             GameObject.Find("Player1").GetComponent<PlayerBehavior>()._PF += 100;
+                InfoScore.missionReussie_J1();
+            }
         }
         else
         {
             if (GameObject.Find("Player1") != null)
+            {
                 GameObject.Find("Player1").GetComponent<PlayerBehavior>()._PF -= PF_lost;
+                InfoScore.missionFailure_J1();
+            }
         }
         if (Time.time - _P2Entered > stayCloseToMeTime)
         {
             if (GameObject.Find("Player2") != null)
+            {
                 GameObject.Find("Player2").GetComponent<PlayerBehavior>()._PF += 100;
+                InfoScore.missionReussie_J2();
+            }
         }
         else
         {
-            if (GameObject.Find("Player2")!= null)
+            if (GameObject.Find("Player2") != null)
+            {
                 GameObject.Find("Player2").GetComponent<PlayerBehavior>()._PF -= PF_lost;
+                InfoScore.missionFailure_J2();
+            }
         }
         _MissionStayNearMe = false;
 
@@ -346,25 +375,37 @@ public class SenpaiController : MonoBehaviour {
         if (_P1Fired)
         {
             if (GameObject.Find("Player1") != null)
+            {
                 GameObject.Find("Player1").GetComponent<PlayerBehavior>()._PF -= PF_lost;
+                InfoScore.missionFailure_J1();
+            }
             startRancuneP1();
         }
         else
         {
             if (GameObject.Find("Player1") != null)
+            {
                 GameObject.Find("Player1").GetComponent<PlayerBehavior>()._PF += 100;
+                InfoScore.missionReussie_J1();
+            }
             _rancuneP1 = false;
         }
         if (_P2Fired)
         {
             if (GameObject.Find("Player2") != null)
+            {
                 GameObject.Find("Player2").GetComponent<PlayerBehavior>()._PF -= PF_lost;
+                InfoScore.missionFailure_J2();
+            }
             startRancuneP2();
         }
         else
         {
             if (GameObject.Find("Player2") != null)
+            {
                 GameObject.Find("Player2").GetComponent<PlayerBehavior>()._PF += 100;
+                InfoScore.missionReussie_J2();
+            }
             _rancuneP2 = false;
         }
     }
@@ -388,24 +429,36 @@ public class SenpaiController : MonoBehaviour {
         yield return new WaitForSeconds(temps);
         if (Time.time - _P1EnteredOpposed > getAwayTime)
         {
-            if (GameObject.Find("Player1")!= null)
+            if (GameObject.Find("Player1") != null)
+            {
                 GameObject.Find("Player1").GetComponent<PlayerBehavior>()._PF += 100;
+                InfoScore.missionReussie_J1();
+            }
         }
         else
         {
-            if (GameObject.Find("Player1")!= null)
+            if (GameObject.Find("Player1") != null)
+            {
                 GameObject.Find("Player1").GetComponent<PlayerBehavior>()._PF -= PF_lost;
-            startRancuneP1();
+                InfoScore.missionFailure_J1();
+            }
+                startRancuneP1();
         }
         if (Time.time - _P2EnteredOpposed > getAwayTime)
         {
             if (GameObject.Find("Player2") != null)
+            {
                 GameObject.Find("Player2").GetComponent<PlayerBehavior>()._PF += 100;
+                InfoScore.missionReussie_J2();
+            }
         }
         else
         {
             if (GameObject.Find("Player2") != null)
+            {
                 GameObject.Find("Player2").GetComponent<PlayerBehavior>()._PF -= PF_lost;
+                InfoScore.missionFailure_J1();
+            }
             startRancuneP2();
         }
         _MissionGetAway = false;
@@ -469,12 +522,18 @@ public class SenpaiController : MonoBehaviour {
             if (coll.gameObject.GetComponent<PlayerProjectile>().launchedby == "P1")
             {
                 if (GameObject.Find("Player1") != null)
+                {
                     GameObject.Find("Player1").GetComponent<PlayerBehavior>()._PF -= pointsLostOnTouchSenpai;
+                    InfoScore.friendlyFire_J1();
+                }
             }
             else
             {
                 if (GameObject.Find("Player2") != null)
+                {
                     GameObject.Find("Player2").GetComponent<PlayerBehavior>()._PF -= pointsLostOnTouchSenpai;
+                    InfoScore.friendlyFire_J2();
+                }
             }
         }
     }

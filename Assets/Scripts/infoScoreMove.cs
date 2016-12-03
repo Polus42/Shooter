@@ -3,7 +3,7 @@ using System.Collections;
 
 public class infoScoreMove : MonoBehaviour {
 
-    public float speed = 10;
+    public float speed = 20;
     private bool endDelay = false;
 
     void Start()
@@ -26,10 +26,10 @@ public class infoScoreMove : MonoBehaviour {
 
     void OnTriggerEnter2D(Collider2D other)
     {
-        print("collision");
+        //print("collision");
         if (other.gameObject.tag == "UI")
         {
-            print("collisionUI");
+            //print("collisionUI");
             Destroy(gameObject);
         }
 
