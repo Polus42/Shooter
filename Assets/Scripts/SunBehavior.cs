@@ -28,6 +28,8 @@ public class SunBehavior : MonoBehaviour {
         }
         set { }
     }
+
+    private bool canMove = false;
     
     private CircleCollider2D cc;
     private int currentHits = 0;
@@ -43,6 +45,11 @@ public class SunBehavior : MonoBehaviour {
 
     private bool block = false;//avoid taking damage in triggerevent
 
+    //Rotation
+    private int _currentdirection = -1;
+    private float timeToWait = 0f;
+    private Coroutine rotateInitial;
+
     void Awake()
     {
         updateReferences();
@@ -57,6 +64,7 @@ public class SunBehavior : MonoBehaviour {
         patternsAvailable.Add("CyclicPattern", cyclicPattern);
         patternsAvailable.Add("WavePattern", wavePattern);
 
+        //Take damage or not
         EventManager.StartListening("OnSurvivalPhase", goVulnerable);
         EventManager.StartListening("OnCounterPhase", goInvicible);
 
@@ -64,6 +72,11 @@ public class SunBehavior : MonoBehaviour {
         EventManager.StartListening("OnSurvivalPhase", onChangingPhase);
         EventManager.StartListening("OnCounterPhase", onChangingPhase);
         EventManager.StartListening("OnAdaptationPhase", onChangingPhase);
+
+        //Rotating or not
+        EventManager.StartListening("OnSurvivalPhase", restrictMovement);
+        EventManager.StartListening("OnCounterPhase", allowMovement);
+        EventManager.StartListening("OnAdaptationPhase", restrictMovement);
 
         cc = GetComponent<CircleCollider2D>();
 
@@ -147,16 +160,14 @@ public class SunBehavior : MonoBehaviour {
     }
 	
 	void Update () {
-        moveRandom();
+        if(canMove)
+            moveRandom();
 
         if (currentPattern != null)
             currentPattern.UpdatePattern();
 	}
 
     //-------------------MOVEMENT
-    private int _currentdirection = -1;
-    private float timeToWait = 0f;
-
     void moveRandom()// => min max duration par mouvement (l,r,static)
     {
         //Debug.Log("sunOP " + sunOP.minWaitMove + sunOP.maxWaitMove + sunOP.timeStatic + sunOP.rotatingSpeed);
@@ -181,22 +192,43 @@ public class SunBehavior : MonoBehaviour {
         {
             goRight();
         }
-        /*
-        if (Random.Range(0, 100) == 0)
-        {
-            _currentdirection = Random.Range(-1, 2);
-        }
-        */
     }
+
     void goLeft()
     {
         transform.Rotate(new Vector3(0, 0, sunOP.rotatingSpeed * Time.deltaTime));
         //transform.localEulerAngles = new Vector3(0f, 0f, transform.localEulerAngles.z + -10f * Time.deltaTime);
     }
+
     void goRight()
     {
         transform.Rotate(new Vector3(0, 0, -sunOP.rotatingSpeed * Time.deltaTime));
         //transform.localEulerAngles = new Vector3(0f, 0f, transform.localEulerAngles.z + 10f * Time.deltaTime);
+    }
+
+    IEnumerator rotateToInitial()
+    {
+        /*int leftOrRight = 1;
+        
+        if (transform.rotation.z % 180 >= 0)
+        {
+            leftOrRight = -1;
+        }
+        */
+        float elapsedTime = 0f;
+        float duration = 3f;
+        float initZ = transform.rotation.z;
+        //Debug.Log("rotate init");
+        while (elapsedTime <= duration)
+        {
+            //Debug.Log("rotate: " + transform.rotation.z);
+            //transform.Rotate(new Vector3(0, 0, Mathf.LerpAngle(initZ, 0, elapsedTime / duration)));
+            transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.identity, elapsedTime / duration);
+            elapsedTime += Time.deltaTime;
+            yield return new WaitForSeconds(0.0166f);
+        }
+        //transform.Rotate(new Vector3(0, 0, 0));
+        yield return new WaitForSeconds(0.5f);
     }
     //-------------------
 
@@ -293,6 +325,23 @@ public class SunBehavior : MonoBehaviour {
         {
             StopCoroutine(coo);
         }
+    }
+    
+    private void restrictMovement()
+    {
+        if(canMove)
+        {
+            canMove = false;
+            if (rotateInitial != null)
+                StopCoroutine(rotateInitial);
+            rotateInitial = StartCoroutine(rotateToInitial());
+        }
+        
+    }
+
+    private void allowMovement()
+    {
+        canMove = true;
     }
 
     private void onChangingPhase()

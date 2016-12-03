@@ -60,8 +60,6 @@ public class AdaptationPhase : IMainPhase
         gc.UpdateDifficulty();
         //gc.goToSurvivalPhase();
     }
-
-
     
     Vector2 getVertexPosition()//from main camera
     {

@@ -6,7 +6,11 @@ public class AsteroidBehavior : MonoBehaviour {
     private Renderer red;
     private GameObject target;
     private Rigidbody2D rb;
-    
+    private bool wasSeen = false;
+    private float gravityFactor = 1f;
+    private float fakeMass = 50f;
+    private bool attracted = false;
+
     void Start()
     {
         OptionsManager.Instance.getAsteroidOptions(out asteroidOP);
@@ -26,8 +30,6 @@ public class AsteroidBehavior : MonoBehaviour {
         //StartCoroutine(attract());
     }
 
-    private bool wasSeen = false;
-
     void Update()
     {
         if (red.isVisible)
@@ -41,13 +43,7 @@ public class AsteroidBehavior : MonoBehaviour {
         }
         if (transform.position.x < 0.5f && transform.position.x > -0.5f && transform.position.y < 0.5f && transform.position.y > -0.5f)//inside sun
             Destroy(gameObject);
-        
     }
-
-    private float gravityFactor = 1f; // then tune this value in editor too
-    private float fakeMass = 50f;
-
-    private bool attracted = false;
 
     void OnTriggerEnter2D(Collider2D other)
     {

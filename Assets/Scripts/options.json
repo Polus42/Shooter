@@ -1,7 +1,7 @@
 {
 	"0": {
 		"General": {
-			"gravity": 10.2,
+			"gravity": 10.2,//useless
 			"adaptationPhaseDuration": 20,
 			"asteroidFrequency": 2,
 		},
@@ -16,7 +16,7 @@
 			"force": 100,
 			"minWaitMove": 5,
 			"maxWaitMove": 10,
-			"timeStatic": 4,
+			"timeStatic": 1,
 			"rotatingSpeed": 30,
 			"pauseTimeBetweenPhase": 3
 		},
