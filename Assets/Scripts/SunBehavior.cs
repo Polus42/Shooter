@@ -130,7 +130,9 @@ public class SunBehavior : MonoBehaviour {
             // Telling senpai we are stronk
             GameObject.Find("Senpai").SendMessage("On" + p.launchedby + "AttackSun");
 
-            StartCoroutine(beHurt());
+            if (beHurtCo != null)
+                StopCoroutine(beHurtCo);
+            beHurtCo = StartCoroutine(beHurt());
             currentHits++;
             if (currentHits >= sunOP.health)
             {
@@ -142,6 +144,8 @@ public class SunBehavior : MonoBehaviour {
             Debug.Log("sun touched");
         }
     }
+
+    private Coroutine beHurtCo;
 
     IEnumerator beHurt()
     {

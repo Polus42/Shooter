@@ -11,7 +11,7 @@
 			"rotateMax": 50,
 		},
 		"Sun": {
-			"health": 10,
+			"health": 20,
 			"weakPointHealth": 3,
 			"force": 100,
 			"minWaitMove": 5,
