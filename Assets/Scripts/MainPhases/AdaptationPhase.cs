@@ -22,8 +22,8 @@ public class AdaptationPhase : IMainPhase
         //gravite++
         //asteroid++
         //soleil taille ++
-        //UnityEngine.GameObject go = (UnityEngine.GameObject) GameObject.Instantiate(gc.asteroidPrefab, new Vector3(5f, 5f, 0), Quaternion.identity);
-        //go.GetComponent<Rigidbody2D>().AddForce((go.transform.position - gc.transform.position) *-30);
+        UnityEngine.GameObject go = (UnityEngine.GameObject) GameObject.Instantiate(gc.asteroidPrefab, new Vector3(5f, 5f, 0), Quaternion.identity);
+        go.GetComponent<Rigidbody2D>().AddForce((go.transform.position - gc.transform.position) *-30);
     }
 
     public void UpdatePhase()

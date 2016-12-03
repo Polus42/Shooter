@@ -10,7 +10,7 @@
 		},
 		"Sun": {
 			"health": 10,
-			"weakPointHealth":10,
+			"weakPointHealth":3,
 			"force": 100,
 			"pauseTimeBetweenPhase": 3
 		},
