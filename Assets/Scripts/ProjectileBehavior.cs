@@ -21,7 +21,7 @@ public class ProjectileBehavior : MonoBehaviour {
             //this.gameObject.SetActive(false);
             Destroy(gameObject);
         }
-        transform.Rotate(new Vector3(0,0,1));
+        transform.Rotate(new Vector3(0,0, 100 * Time.deltaTime));
             
 	}
     void OnTriggerEnter2D(Collider2D other)

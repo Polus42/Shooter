@@ -99,13 +99,15 @@ public class OptionsHolder
     {
         public float gravity;
         public float adaptationPhaseDuration;
+        public float asteroidFrequency;
     }
 
     [Serializable]
     public class AsteroidOP : IOption
     {
-        public int count;
         public float force;
+        public float rotateMin;
+        public float rotateMax;
     }
 
     [Serializable]
@@ -115,6 +117,10 @@ public class OptionsHolder
         public float force;
         public float pauseTimeBetweenPhase;
         public int weakPointHealth;
+        public float minWaitMove;
+        public float maxWaitMove;
+        public float timeStatic;
+        public float rotatingSpeed;
     }
 
     [Serializable]

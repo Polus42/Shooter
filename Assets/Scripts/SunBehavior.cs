@@ -110,10 +110,13 @@ public class SunBehavior : MonoBehaviour {
         if (p!=null)
         {
             Destroy(other.gameObject);
-            // Telling senpai we are stronk
-            GameObject.Find("Senpai").SendMessage("On" + p.launchedby + "AttackSun");
+            
             if (block)
                 return;
+
+            // Telling senpai we are stronk
+            GameObject.Find("Senpai").SendMessage("On" + p.launchedby + "AttackSun");
+
             StartCoroutine(beHurt());
             currentHits++;
             if (currentHits >= sunOP.health)
@@ -145,14 +148,6 @@ public class SunBehavior : MonoBehaviour {
 	
 	void Update () {
         moveRandom();
-        if (_currentdirection == 1)
-        {
-            goLeft();
-        }
-        else if (_currentdirection == -1)
-        {
-            goRight();
-        }
 
         if (currentPattern != null)
             currentPattern.UpdatePattern();
@@ -161,24 +156,30 @@ public class SunBehavior : MonoBehaviour {
     //-------------------MOVEMENT
     private int _currentdirection = -1;
     private float timeToWait = 0f;
-    float minWaitMove = 5f;
-    float maxWaitMove = 10f;
-    float timeStatic = 50f;
-    float rotatingSpeed = 0;
+
     void moveRandom()// => min max duration par mouvement (l,r,static)
     {
+        //Debug.Log("sunOP " + sunOP.minWaitMove + sunOP.maxWaitMove + sunOP.timeStatic + sunOP.rotatingSpeed);
         timeToWait += Time.deltaTime;
         if(timeToWait >= 0f)
         {
-            _currentdirection = Random.Range(-1, 2);
+            _currentdirection = Random.Range(-1, 2);//even if already static, he can remain static
             if(_currentdirection == 0)
             {
-                timeToWait = -timeStatic;
+                timeToWait = -sunOP.timeStatic;
             }
             else
             {
-                timeToWait = -Random.Range(minWaitMove, maxWaitMove);
+                timeToWait = -Random.Range(sunOP.minWaitMove, sunOP.maxWaitMove);
             }
+        }
+        if (_currentdirection == 1)
+        {
+            goLeft();
+        }
+        else if (_currentdirection == -1)
+        {
+            goRight();
         }
         /*
         if (Random.Range(0, 100) == 0)
@@ -189,12 +190,12 @@ public class SunBehavior : MonoBehaviour {
     }
     void goLeft()
     {
-        transform.Rotate(new Vector3(0,0, -rotatingSpeed * Time.deltaTime));
+        transform.Rotate(new Vector3(0, 0, sunOP.rotatingSpeed * Time.deltaTime));
         //transform.localEulerAngles = new Vector3(0f, 0f, transform.localEulerAngles.z + -10f * Time.deltaTime);
     }
     void goRight()
     {
-        transform.Rotate(new Vector3(0, 0, rotatingSpeed * Time.deltaTime));
+        transform.Rotate(new Vector3(0, 0, -sunOP.rotatingSpeed * Time.deltaTime));
         //transform.localEulerAngles = new Vector3(0f, 0f, transform.localEulerAngles.z + 10f * Time.deltaTime);
     }
     //-------------------

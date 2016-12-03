@@ -6,8 +6,8 @@ public class WeakPoint : MonoBehaviour {
 
     private int _health;
 
-    float blinkDuration;//a mettre dans json
-    float scalingDuration;
+    public float blinkDuration = 0.3f;
+    public float scalingDuration = 2f;
 
 
     void Awake()
@@ -40,7 +40,7 @@ public class WeakPoint : MonoBehaviour {
         OptionsManager.Instance.getSunOptions(out sunOP);
         _health = sunOP.weakPointHealth;
         canBeTouched = false;
-        StartCoroutine(scaling(0f, 1f, 2f, false));
+        StartCoroutine(scaling(0f, 1f, scalingDuration, false));
 
         //var material = GetComponent<SpriteRenderer>().material;//mettre variable
         //material.SetColor("_BlinkColor", new Color(0,0,0,0));
@@ -53,13 +53,14 @@ public class WeakPoint : MonoBehaviour {
 
     void OnTriggerEnter2D(Collider2D other)
     {
-        if (canBeTouched && other.gameObject.GetComponent<PlayerProjectile>() != null)
+        if (canBeTouched && other.gameObject.GetComponent<PlayerProjectile>() != null && _health > 0)
         {
             Destroy(other.gameObject);
             canBeTouched = false;
+            Debug.Log("weak point health: " + _health);
             _health--;
             Debug.Log("weak point touched");
-            StartCoroutine(blinkSmooth(Time.timeScale, 0.3f, Color.yellow));//frame blink + invulnerability
+            StartCoroutine(blinkSmooth(Time.timeScale, blinkDuration, Color.yellow));//frame blink + invulnerability
             if (_health<=0)
             {
                 if (other.gameObject.GetComponent<PlayerProjectile>().launchedby == "P1")
@@ -70,7 +71,7 @@ public class WeakPoint : MonoBehaviour {
                 {
                     GameObject.Find("Senpai").SendMessage("OnP2DestroyWeakpoint");
                 }
-                StartCoroutine(scaling(1f, 0f, 2f, true));
+                StartCoroutine(scaling(1f, 0f, scalingDuration, true));
             }
         }
     }

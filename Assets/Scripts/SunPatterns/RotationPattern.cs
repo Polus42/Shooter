@@ -110,7 +110,7 @@ public class RotationPattern : IPattern
                 continue;
             }
             go.GetComponent<Rigidbody2D>().isKinematic = false;
-            go.GetComponent<Rigidbody2D>().AddForce((go.transform.position - sb.transform.position) * options.bulletSpeed * sb.force);
+            go.GetComponent<Rigidbody2D>().AddForce((go.transform.position - sb.transform.position).normalized * options.bulletSpeed * sb.force);
             //go.GetComponent<Rigidbody2D>().AddForce(go.transform.forward * options.bulletSpeed * sb.force);
 
             //Cool    

@@ -3,15 +3,19 @@ using System.Collections;
 
 public class PlayerProjectile : MonoBehaviour {
     public string launchedby;
+    private Renderer red;
     // Use this for initialization
     void Start () {
-	
-	}
+        red = GetComponent<Renderer>();
+    }
 	
 	// Update is called once per frame
 	void Update () {
-	
-	}
+        if (!red.isVisible)
+        {
+            Destroy(gameObject);
+        }
+    }
     void Explode()
     {
         var exp = GetComponent<ParticleSystem>();

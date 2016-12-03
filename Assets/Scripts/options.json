@@ -2,16 +2,22 @@
 	"0": {
 		"General": {
 			"gravity": 10.2,
-			"adaptationPhaseDuration": 10
+			"adaptationPhaseDuration": 20,
+			"asteroidFrequency": 2,
 		},
 		"Asteroid": {
-			"count": 5,
-			"force": 10
+			"force": 100,
+			"rotateMin": 10,
+			"rotateMax": 50,
 		},
 		"Sun": {
 			"health": 10,
-			"weakPointHealth":3,
+			"weakPointHealth": 3,
 			"force": 100,
+			"minWaitMove": 5,
+			"maxWaitMove": 10,
+			"timeStatic": 4,
+			"rotatingSpeed": 30,
 			"pauseTimeBetweenPhase": 3
 		},
 		"PatternsOptions": {
