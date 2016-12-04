@@ -85,6 +85,7 @@ public class SunBehavior : MonoBehaviour {
         cc = GetComponent<CircleCollider2D>();
 
         //coroutine = SelectingPaterns();
+        GetComponent<SpriteRenderer>().sprite = sleepingSprite;
 
         weakPoint = transform.Find("WeakPoint");
     }
@@ -104,6 +105,7 @@ public class SunBehavior : MonoBehaviour {
 
     private void goInvicible()
     {
+        GetComponent<SpriteRenderer>().sprite = angrySprite;
         Debug.Log("go invicible");
         //cc.enabled = false;
         block = true;
@@ -343,11 +345,16 @@ public class SunBehavior : MonoBehaviour {
         if(canMove)
         {
             canMove = false;
-            if (rotateInitial != null)
-                StopCoroutine(rotateInitial);
-            rotateInitial = StartCoroutine(rotateToInitial());
+            launchRotateInitial();
         }
         
+    }
+
+    public void launchRotateInitial()
+    {
+        if (rotateInitial != null)
+            StopCoroutine(rotateInitial);
+        rotateInitial = StartCoroutine(rotateToInitial());
     }
 
     private void allowMovement()

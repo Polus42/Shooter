@@ -1,4 +1,4 @@
-﻿Shader "Custom/NewSurfaceShader" {
+﻿Shader "Custom/ShaderSpriteBlink" {
 	Properties
 	{
 		[PerRendererData] _MainTex("Sprite Texture", 2D) = "white" {}

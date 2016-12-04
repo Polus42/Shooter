@@ -43,12 +43,23 @@ public class LaserPattern : IPattern
         Quaternion rotation = Quaternion.LookRotation(relativePos);
         sb.transform.rotation = rotation;
         */
-        Vector3 diff = target.transform.position - sb.transform.position;
-        diff.Normalize();
-        float rot_z = Mathf.Atan2(diff.y, diff.x) * Mathf.Rad2Deg;
-        //sb.transform.rotation = Quaternion.Euler(0f, 0f, rot_z - 90);
-        //sb.transform.rotation = Quaternion.Lerp(sb.transform.rotation, Quaternion.FromToRotation(sb.transform.position, target.transform.position - sb.transform.position), Time.deltaTime);
-        sb.transform.rotation = Quaternion.Slerp(sb.transform.rotation, Quaternion.Euler(0f, 0f, rot_z + 90), Time.deltaTime * toTargetSpeed);
+
+        if(target != null)
+        {
+            Vector3 diff = target.transform.position - sb.transform.position;
+            diff.Normalize();
+            float rot_z = Mathf.Atan2(diff.y, diff.x) * Mathf.Rad2Deg;
+            //sb.transform.rotation = Quaternion.Euler(0f, 0f, rot_z - 90);
+            //sb.transform.rotation = Quaternion.Lerp(sb.transform.rotation, Quaternion.FromToRotation(sb.transform.position, target.transform.position - sb.transform.position), Time.deltaTime);
+            sb.transform.rotation = Quaternion.Slerp(sb.transform.rotation, Quaternion.Euler(0f, 0f, rot_z + 90), Time.deltaTime * toTargetSpeed);
+        }
+        else
+        {
+            //EndPattern();
+            players = GameObject.FindGameObjectsWithTag("Player");
+            selectTarget();
+        }
+        
 
         counterTime += Time.deltaTime;
         if (counterTime >= frequency)
@@ -75,5 +86,6 @@ public class LaserPattern : IPattern
     public void EndPattern()
     {
         animatedLaser.gameObject.SetActive(false);
+        sb.launchRotateInitial();
     }
 }

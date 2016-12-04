@@ -24,6 +24,7 @@ public class ProjectileBehavior : MonoBehaviour {
         transform.Rotate(new Vector3(0,0, 100 * Time.deltaTime));
             
 	}
+
     void OnTriggerEnter2D(Collider2D other)
     {
         if (other.gameObject.GetComponent<PlayerProjectile>() != null)

@@ -131,13 +131,15 @@ public class PlayerBehavior : MonoBehaviour {
 
     // Actions spéciales ///////////////////////////////////////
     // Boost
+    Coroutine boostCoroutine;
+
     void boost()
     {
-        particles.SetActive(true);
-
-        if (_boostTime==0)
+        if (_boostTime == 0)
         {
-            if (_rotateSpeed<0)
+            particles.SetActive(true);
+
+            if (_rotateSpeed < 0)
             {
                 _rotateSpeed -= speedBonus;
             }
@@ -145,10 +147,20 @@ public class PlayerBehavior : MonoBehaviour {
             {
                 _rotateSpeed += speedBonus;
             }
-            StartCoroutine(initSpeed());
+            boostCoroutine = StartCoroutine(speedUpTimer());
            _boostTime = boostReloadTime;
         }
     }
+
+    void stopBoost()
+    {
+        if (boostCoroutine != null)
+        {
+            StopCoroutine(boostCoroutine);
+            normalSpeed();
+        }
+    }
+    //----------
     public void slow(float factor)
     {
         _rotateSpeed = _rotateSpeed / 2;
@@ -168,12 +180,11 @@ public class PlayerBehavior : MonoBehaviour {
         }
         _audioSources[2].Pause();
     }
-    IEnumerator initSpeed()
+    //----------
+    void normalSpeed()
     {
-        _audioSources[2].Play();
-        yield return new WaitForSeconds(boostTime);
         particles.SetActive(false);
-        if (_rotateSpeed<0)
+        if (_rotateSpeed < 0)
         {
             _rotateSpeed = -initialSpeed;
         }
@@ -183,24 +194,49 @@ public class PlayerBehavior : MonoBehaviour {
         }
         _audioSources[2].Pause();
     }
+    IEnumerator speedUpTimer()
+    {
+        _audioSources[2].Play();
+        yield return new WaitForSeconds(boostTime);
+        normalSpeed();
+        boostCoroutine = null;
+    }
     // Shield
+    Coroutine shieldCoroutine;
+
     void shield()
     {
-        if (_shieldTime==0)
+        if (_shieldTime == 0)
         {
             _shield = true;
             transform.GetChild(3).gameObject.SetActive(true);
-            StartCoroutine(initShield());
+            shieldCoroutine = StartCoroutine(shieldTimer());
             _shieldTime = shieldReloadTime;
         }
     }
-    IEnumerator initShield()
+
+    void stopShield()
     {
-        _audioSources[1].Play();
-        yield return new WaitForSeconds(shieldTime);
+        if(shieldCoroutine != null)
+        {
+            StopCoroutine(shieldCoroutine);
+            noShield();
+        }
+    }
+
+    void noShield()
+    {
         _shield = false;
         transform.GetChild(3).gameObject.SetActive(false);
         _audioSources[1].Stop();
+    }
+
+    IEnumerator shieldTimer()
+    {
+        _audioSources[1].Play();
+        yield return new WaitForSeconds(shieldTime);
+        noShield();
+        shieldCoroutine = null;
     }
     void checkInput()
     {
@@ -229,10 +265,10 @@ public class PlayerBehavior : MonoBehaviour {
             {
             CancelInvoke("shoot");
             }
-            if (Input.GetAxis(playerPrefix + "_horizontal_2") != 0 || Input.GetAxis(playerPrefix + "_vertical_2") != 0)
+            if (Input.GetAxis(playerPrefix + "_horizontal_1") != 0 || Input.GetAxis(playerPrefix + "_vertical_1") != 0)
             {
-            float x = Input.GetAxis(playerPrefix + "_horizontal_2");
-            float y = Input.GetAxis(playerPrefix + "_vertical_2");
+            float x = Input.GetAxis(playerPrefix + "_horizontal_1");
+            float y = Input.GetAxis(playerPrefix + "_vertical_1");
             _cursor_center.transform.localEulerAngles = new Vector3(transform.eulerAngles.x, transform.eulerAngles.y, -Mathf.Atan2(x, y) * Mathf.Rad2Deg);
         }
             else
@@ -244,10 +280,21 @@ public class PlayerBehavior : MonoBehaviour {
         {
             boost();
         }
+        if (Input.GetButtonUp(playerPrefix + "_boost"))
+        {
+            Debug.Log("stop boost button");
+            stopBoost();
+        }
         // Shield /////////////////////////////////////////
         if (Input.GetButtonDown(playerPrefix + "_shield"))
         {
+            Debug.Log("shield button");
             shield();
+        }
+        if (Input.GetButtonUp(playerPrefix + "_shield"))
+        {
+            Debug.Log("stop shield button");
+            stopShield();
         }
         // Reload scene /////////////////////////////////////////
         if (Input.GetButtonDown("Cancel"))

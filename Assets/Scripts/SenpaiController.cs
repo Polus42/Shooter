@@ -11,6 +11,7 @@ public class SenpaiController : MonoBehaviour {
     public Sprite happySprite;
     public Sprite angrySprite;
     public Sprite neutralSprite;
+    public Sprite touchedSprite;
     // Messages list
     public GUISkin messages;
     private int _currentdirection;
@@ -68,6 +69,8 @@ public class SenpaiController : MonoBehaviour {
     private Coroutine isSayingSomething;
 
     public float slowTimeScale = 0.1f;
+    private Coroutine blink;
+    private bool canBeTouched = true;
 
     void Awake()
     {
@@ -104,13 +107,19 @@ public class SenpaiController : MonoBehaviour {
     void Start() {
         _health = startingHealth;
 
-        say("pwet pwet", 5, false);
-        say("omg :D", 2, true);
-        say("turn turn", 3, false);
-
-        StartCoroutine(startMissionSystem());
+        StartCoroutine(introSpeaking());
 
         InfoScore = GameObject.Find("Canvas").GetComponent<infoScore>();
+    }
+
+    IEnumerator introSpeaking()
+    {
+        say("pwet pwet", 2, false);
+        //say("omg :D", 2, true);
+        say("turn turn", 2, false);
+        yield return new WaitForSeconds(5f);
+        EventManager.TriggerEvent("IntroOver");
+        StartCoroutine(startMissionSystem());
     }
 
     private void switchPhase(int index)
@@ -141,6 +150,7 @@ public class SenpaiController : MonoBehaviour {
 
         updateFace();
     }
+
     void updateFace()
     {
         if (_rancuneP1 || _rancuneP2)
@@ -148,7 +158,7 @@ public class SenpaiController : MonoBehaviour {
             GetComponent<SpriteRenderer>().sprite = angrySprite;
             //message de caprice ratée
         }
-        else
+        else if(blink == null)
         {
             GetComponent<SpriteRenderer>().sprite = neutralSprite;
         }
@@ -168,14 +178,17 @@ public class SenpaiController : MonoBehaviour {
     {
         transform.RotateAround(Vector3.zero, new Vector3(0, 0, 1), -rotateSpeed * Time.deltaTime);
     }
+
     void ApplyDamage(int amount)
     {
+        Debug.Log("sempai lose health");
         _health -= amount;
         if (_health <= 0)
         {
             Destroy(gameObject);
         }
     }
+
     // Displaying speech bubbles
     void OnGUI()
     {
@@ -192,6 +205,7 @@ public class SenpaiController : MonoBehaviour {
     {
         if(isSayingSomething != null)
         {
+            //Debug.Log("is saying somehting: " + whatisay);
             messagesWaiting.Add(initSaying(timelasting, whatisay, slowTime));
             return;
         }
@@ -224,6 +238,10 @@ public class SenpaiController : MonoBehaviour {
             IEnumerator messageWaiting = messagesWaiting[0];
             messagesWaiting.Remove(messageWaiting);
             isSayingSomething = StartCoroutine(messageWaiting);
+        }
+        else
+        {
+            isSayingSomething = null;//sinon met tout les messages dans attente
         }
     }
     // Missions d'entraide ///////////////////////////////////
@@ -553,8 +571,13 @@ public class SenpaiController : MonoBehaviour {
     {
         if (coll.gameObject.GetComponent<PlayerProjectile>() != null)
         {
-            GetComponents<AudioSource>()[1].Play();
             Destroy(coll.gameObject);
+
+            if (!canBeTouched)
+                return;
+
+            GetComponents<AudioSource>()[1].Play();
+            
             if (coll.gameObject.GetComponent<PlayerProjectile>().launchedby == "P1")
             {
                 if (GameObject.Find("Player1") != null)
@@ -571,8 +594,63 @@ public class SenpaiController : MonoBehaviour {
                     InfoScore.friendlyFire_J2();
                 }
             }
+
+            Debug.Log("sempai collision touched by: " + coll.gameObject.name);
+            startBlink();
         }
     }
+    
+    void startBlink()
+    {
+        canBeTouched = false;
+        if (blink == null)
+            blink = StartCoroutine(blinkSmooth(Time.timeScale, 0.4f, Color.white));
+    }
+
+    void OnTriggerEnter2D(Collider2D other)
+    {
+        Debug.Log("sempai trigger touched by: " + other.gameObject.name);
+
+        if (!canBeTouched || other.GetComponent<PlayerBehavior>() != null)//peut pas etre touché par le joueur
+            return;
+        
+        startBlink();
+    }
+
+    IEnumerator blinkSmooth(float timeScale, float duration, Color blinkColor)
+    {
+        Sprite lastSprite = GetComponent<SpriteRenderer>().sprite;
+        GetComponent<SpriteRenderer>().sprite = touchedSprite;
+        blinkColor.a = 0f;
+        var material = GetComponent<SpriteRenderer>().material;
+        float alpha = 0f;
+        float startTime = Time.time;
+        duration = duration / 2;
+        while (alpha < 1f)
+        {
+            alpha = Mathf.Lerp(0f, 1f, (Time.time - startTime) / duration);
+            blinkColor.a = alpha;
+            material.SetColor("_BlinkColor", blinkColor);
+            yield return null;
+        }
+        startTime = Time.time;
+        while (alpha > 0f)
+        {
+            alpha = Mathf.Lerp(1f, 0f, (Time.time - startTime) / duration);
+            blinkColor.a = alpha;
+            material.SetColor("_BlinkColor", blinkColor);
+            yield return null;
+        }
+        
+        canBeTouched = true;
+
+        if(touchedSprite == GetComponent<SpriteRenderer>().sprite)
+            GetComponent<SpriteRenderer>().sprite = lastSprite;
+
+        blink = null;
+    }
+
+
     //////////////////////////////////////////////////////////////////////
     void moveFront(UnityAction currentMission)//move item in list to front (index 0)
     {
@@ -595,6 +673,11 @@ public class SenpaiController : MonoBehaviour {
 
     void startRandomMission()
     {
+        if(currentMissions == null)
+        {
+            return;
+        }
+
         if (_MissionDestroyWeakpoint || _MissionAttackSun || _MissionGetAway || _MissionStopFireing || _MissionStayNearMe)
         {
             return;
@@ -642,6 +725,7 @@ public class SenpaiController : MonoBehaviour {
     }
     IEnumerator startMissionSystem()
     {
+        Debug.Log("mission system launched");
         while(true)
         {
             yield return new WaitForSeconds(Random.Range(minTimeBetweenMission, maxTimeBetweenMission));

@@ -27,9 +27,16 @@ public class GameController : MonoBehaviour {
         EventManager.StartListening("WeakPointDestroyed", goToAdaptationPhase);
         EventManager.StartListening("SunInjured", goToCounterPhase);
         EventManager.StartListening("AdaptationEnded", goToSurvivalPhase);
+
+        EventManager.StartListening("IntroOver", startPhases);
     }
     
 	void Start () {
+        
+    }
+
+    void startPhases()
+    {
         switch (startPhase)
         {
             case "SurvivalPhase":
@@ -46,9 +53,10 @@ public class GameController : MonoBehaviour {
                 break;
         }
     }
-	
-	void Update () {
-        currentPhase.UpdatePhase();
+
+    void Update () {
+        if(currentPhase != null)
+            currentPhase.UpdatePhase();
     }
 
     //triggered by adaptationphase
