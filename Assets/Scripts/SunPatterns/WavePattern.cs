@@ -51,6 +51,8 @@ public class WavePattern : IPattern
 
     void emitProjectile()
     {
+        if (!sb.GetComponents<AudioSource>()[2].isPlaying)
+            sb.GetComponents<AudioSource>()[2].Play();
         //Debug.Log("number proj in screen : " + GameObject.FindGameObjectsWithTag("Projectile").Length);
         for (int i = 0; i < options.count; i++)
         {

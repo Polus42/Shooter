@@ -47,6 +47,8 @@ public class CyclicPattern : IPattern
 
     void emitProjectile()
     {
+        if (!sb.GetComponents<AudioSource>()[2].isPlaying)
+            sb.GetComponents<AudioSource>()[2].Play();
         //Debug.Log("number proj in screen : " + GameObject.FindGameObjectsWithTag("Projectile").Length);
         //Debug.Log("pos of sun : " + sb.transform.position.x + " " + sb.transform.position.y + " " + sb.transform.position.z);
         for (int i = 0; i < options.count; i++)

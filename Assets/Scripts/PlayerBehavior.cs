@@ -114,9 +114,14 @@ public class PlayerBehavior : MonoBehaviour {
     }
     void ApplyDamage(int amount)
     {
-        GetComponents<AudioSource>()[3].Play();
+        if (! GetComponents<AudioSource>()[4].isPlaying)
+            GetComponents<AudioSource>()[4].Play();
+        
         if (!_shield && vulnerable)
         {
+            if (! GetComponents<AudioSource>()[3].isPlaying)
+                GetComponents<AudioSource>()[3].Play();
+
             _health -= amount;
             if (_health <= 0)
             {
