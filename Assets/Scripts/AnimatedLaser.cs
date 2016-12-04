@@ -29,7 +29,7 @@ public class AnimatedLaser : MonoBehaviour {
     {
         GetComponents<AudioSource>()[0].Play();
         animator.Rebind();
-        if (toBigCoroutine == null)
+        if (toBigCoroutine != null)
             StopCoroutine(toBigCoroutine);
         toBigCoroutine = StartCoroutine(toBig());
     }
@@ -37,6 +37,7 @@ public class AnimatedLaser : MonoBehaviour {
     IEnumerator toBig()
     {
         yield return new WaitForSeconds(timeBeforeBig);
+        GetComponents<AudioSource>()[0].Stop();
         GetComponents<AudioSource>()[1].Play();
         animator.SetBool("isBig", true);
     }

@@ -29,6 +29,8 @@ public class PlayerBehavior : MonoBehaviour {
     private bool _shield = false;
     public GameObject particles;
 
+    public GameObject explodePrefab;
+
     void Awake()
     {
         EventManager.StartListening("WeakPointDestroyed", lifeUp);
@@ -38,17 +40,20 @@ public class PlayerBehavior : MonoBehaviour {
     //Regain de vie
     void lifeUp()
     {
-        Debug.Log("LIFE UP !");
+        Debug.Log("LIFE UP !: current " + _health);
         if(_health < startingHealth)
         {
+            Debug.Log("LIFE GAIN");
             _health++;
         }
     }
 
+    public AudioClip explosionSound;
     bool endgame = false;
 
     void stopMoving()
     {
+        CancelInvoke("shoot");
         endgame = true;
         _rotateSpeed = 0;
         autoMove = false;
@@ -118,16 +123,27 @@ public class PlayerBehavior : MonoBehaviour {
         }
         go.GetComponent<Rigidbody2D>().AddForce(new Vector2(_cursor.position.x-transform.position.x, _cursor.position.y- transform.position.y).normalized*bulletForce);
     }
+
     void ApplyDamage(int amount)
     {
-        GetComponents<AudioSource>()[3].Play();
+        if (!GetComponents<AudioSource>()[4].isPlaying)
+            GetComponents<AudioSource>()[4].Play();
+
         if (!_shield && vulnerable)
         {
+            if (!GetComponents<AudioSource>()[3].isPlaying)
+                GetComponents<AudioSource>()[3].Play();
+
             _health -= amount;
             if (_health <= 0)
             {
+                vulnerable = false;
                 EventManager.TriggerEvent("PlayerDead");
-                Destroy(gameObject);
+                GameObject explosion = (GameObject)Instantiate(explodePrefab, this.transform.position, Quaternion.identity);
+                GetComponents<AudioSource>()[4].Play();
+                GetComponent<Renderer>().enabled = false;
+                Destroy(gameObject, GetComponents<AudioSource>()[4].clip.length);
+                //AudioSource.PlayClipAtPoint(explosionSound, transform.position);
             }
             else
             {

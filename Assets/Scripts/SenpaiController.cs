@@ -123,7 +123,7 @@ public class SenpaiController : MonoBehaviour {
         say("si vous voulez survivre\nfaites-moi plaisir !", 2, true);
         say("ha ha ha !", 2, false);
 
-        yield return new WaitForSeconds(12f);
+        yield return new WaitForSeconds(8f);
         EventManager.TriggerEvent("IntroOver");
         StartCoroutine(startMissionSystem());
     }
@@ -139,7 +139,7 @@ public class SenpaiController : MonoBehaviour {
         rotateSpeed = 0;
 
         //tp most valuable player
-        GameObject p1 = GameObject.Find("Player2");
+        GameObject p1 = GameObject.Find("Player1");
         GameObject p2 = GameObject.Find("Player2");
         GameObject winner;
         if (p2.GetComponent<PlayerBehavior>()._PF > p1.GetComponent<PlayerBehavior>()._PF)
@@ -160,7 +160,11 @@ public class SenpaiController : MonoBehaviour {
         }
 
         winner.transform.position = new Vector3(transform.position.x + offset, transform.position.y, transform.position.z);
-        winner.transform.rotation = Quaternion.identity;
+        winner.transform.localRotation = Quaternion.identity;
+        if(winner == p1)
+        {
+            p1.GetComponent<SpriteRenderer>().flipY = false;
+        }
 
         StartCoroutine(outroSpeaking(winner));
     }
@@ -303,7 +307,7 @@ public class SenpaiController : MonoBehaviour {
         }
         else
         {
-            isSayingSomething = null;//sinon met tout les messages dans attente
+            isSayingSomething = null;//sinon il met tous les messages dans attente
         }
     }
     // Missions d'entraide ///////////////////////////////////

@@ -85,6 +85,8 @@ public class SunBehavior : MonoBehaviour {
         EventManager.StartListening("OutroOver", doExplode);
         EventManager.StartListening("EndGame", willExplode);
 
+        EventManager.StartListening("IntroOver", stopRrrr);
+
         cc = GetComponent<CircleCollider2D>();
 
         //coroutine = SelectingPaterns();
@@ -98,6 +100,11 @@ public class SunBehavior : MonoBehaviour {
         //StartCoroutine(SelectingPaterns());
     }
 
+    void stopRrrr()
+    {
+        gameObject.GetComponents<AudioSource>()[4].Stop();
+    }
+
     private void updateReferences()
     {
         OptionsManager.Instance.getSunOptions(out sunOP);
@@ -108,6 +115,27 @@ public class SunBehavior : MonoBehaviour {
 
     void willExplode()
     {
+        Debug.Log("!!!!!!!!!!!!!stop sun behavior!!!!!!!!!!");
+
+        canMove = false;
+
+        if (launchSelecting != null)
+        {
+            StopCoroutine(launchSelecting);
+        }
+
+        if (lastRoutine != null)
+        {
+            StopCoroutine(lastRoutine);
+        }
+
+        if (beHurtCo != null)
+        {
+            StopCoroutine(beHurtCo);
+        }
+
+        currentPattern = null;
+
         GetComponent<SpriteRenderer>().sprite = hurtSprite;
     }
 
@@ -116,8 +144,12 @@ public class SunBehavior : MonoBehaviour {
     void doExplode()
     {
         //animation
-        gameObject.SetActive(false);
         GameObject explosion = (GameObject) Instantiate(explodePrefab, this.transform.position, Quaternion.identity);
+        GetComponents<AudioSource>()[5].Play();
+        GetComponent<Renderer>().enabled = false;
+        Destroy(gameObject, GetComponents<AudioSource>()[5].clip.length);
+
+        //gameObject.SetActive(false);
     }
 
     private void goInvicible()

@@ -11,6 +11,8 @@ public class AsteroidBehavior : MonoBehaviour {
     private float fakeMass = 50f;
     private bool attracted = false;
 
+    public GameObject explodePrefab;
+
     void Start()
     {
         GetComponents<AudioSource>()[0].Play();
@@ -46,6 +48,8 @@ public class AsteroidBehavior : MonoBehaviour {
             Destroy(gameObject);
     }
 
+    bool touchedSo = false;
+    
     void OnTriggerEnter2D(Collider2D other)
     {
         Debug.Log("touched attraction");
@@ -53,10 +57,18 @@ public class AsteroidBehavior : MonoBehaviour {
         {
             attracted = true;
         }
-        else if (other.gameObject.GetComponent<PlayerBehavior>() != null)
+        else if (!touchedSo && other.gameObject.GetComponent<PlayerBehavior>() != null)
         {
+            touchedSo = true;
+
             other.gameObject.SendMessage("ApplyDamage", 1);
-            Destroy(gameObject);
+
+            GameObject explosion = (GameObject)Instantiate(explodePrefab, this.transform.position, Quaternion.identity);
+
+            GetComponents<AudioSource>()[1].Play();
+            GetComponent<Renderer>().enabled = false;
+
+            Destroy(gameObject, GetComponents<AudioSource>()[1].clip.length);
         }
     }
 

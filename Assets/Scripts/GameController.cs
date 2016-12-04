@@ -30,7 +30,7 @@ public class GameController : MonoBehaviour {
         EventManager.StartListening("AdaptationEnded", goToSurvivalPhase);
 
         EventManager.StartListening("IntroOver", startPhases);
-
+        EventManager.StartListening("OutroOver", senpaiGoneAway);
         EventManager.StartListening("PlayerDead", playerDead);
     }
     
@@ -41,23 +41,38 @@ public class GameController : MonoBehaviour {
     public GameObject uiPanelGameOver;
     public GameObject uiPanelVictory;
 
+    GameObject messageToShow;
+    bool endgame = false;
+
+
     void endGame()
     {
+        endgame = true;
         currentPhase = null;
         EventManager.TriggerEvent("EndGame");
+        messageToShow = uiPanelVictory;
         //uiPanelVictory.SetActive(true);
+    }
+
+    void senpaiGoneAway()
+    {
+        StartCoroutine(SwitchSceneToMenu());
     }
 
     void playerDead()
     {
         currentPhase = null;
-        uiPanelGameOver.SetActive(true);
-        //SceneManager.LoadScene("Menu");
-        StartCoroutine(SwitchScene());
+        //uiPanelGameOver.SetActive(true);
+        messageToShow = uiPanelGameOver;
+        StartCoroutine(SwitchSceneToMenu());
     }
 
-    private IEnumerator SwitchScene()
+    private IEnumerator SwitchSceneToMenu()
     {
+        yield return new WaitForSeconds(2f);
+        messageToShow.SetActive(true);
+        yield return new WaitForSeconds(2f);
+
         //load new scene
         AsyncOperation loadNewScene = SceneManager.LoadSceneAsync("Menu");
 
@@ -143,6 +158,13 @@ public class GameController : MonoBehaviour {
     {
         if(currentPhase != null)
             currentPhase.EndPhase();
+        
+        //ici car c'est l'adaptation phase qui declenche difficulty++ dans EndPhase
+        if (endgame)
+        {
+            return;
+        }
+
         currentPhase = survivalPhase;
         currentPhase.InitPhase();
 
