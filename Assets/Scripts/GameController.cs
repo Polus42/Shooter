@@ -119,7 +119,7 @@ public class GameController : MonoBehaviour {
         currentLoopDifficulty++;
         if (currentLoopDifficulty > maxDifficulty - 1)
         {
-            Debug.Log("end game");
+            Debug.Log("END GAME");
             endGame();
         }
         else

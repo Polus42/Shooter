@@ -128,10 +128,14 @@ public class SenpaiController : MonoBehaviour {
         StartCoroutine(startMissionSystem());
     }
 
+    private bool endgame = false;
+
     void launchOutro()
     {
         StopAllCoroutines();
 
+        endgame = true;
+        GetComponent<SpriteRenderer>().sprite = happySprite;
         rotateSpeed = 0;
 
         //tp most valuable player
@@ -148,7 +152,7 @@ public class SenpaiController : MonoBehaviour {
         }
 
         float xLeftRight = transform.position.x;
-        int offset = -20;
+        float offset = -1f;
 
         if (xLeftRight > 0)
         {
@@ -156,6 +160,7 @@ public class SenpaiController : MonoBehaviour {
         }
 
         winner.transform.position = new Vector3(transform.position.x + offset, transform.position.y, transform.position.z);
+        winner.transform.rotation = Quaternion.identity;
 
         StartCoroutine(outroSpeaking(winner));
     }
@@ -185,6 +190,10 @@ public class SenpaiController : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
+        if (endgame)
+            return;
+
+
         moveRandom();
         if (_currentdirection == 1)
         {

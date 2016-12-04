@@ -117,7 +117,7 @@ public class SunBehavior : MonoBehaviour {
     {
         //animation
         gameObject.SetActive(false);
-        Instantiate(explodePrefab, this.transform.position, Quaternion.identity);
+        GameObject explosion = (GameObject) Instantiate(explodePrefab, this.transform.position, Quaternion.identity);
     }
 
     private void goInvicible()

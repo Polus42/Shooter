@@ -45,11 +45,14 @@ public class PlayerBehavior : MonoBehaviour {
         }
     }
 
+    bool endgame = false;
+
     void stopMoving()
     {
+        endgame = true;
+        _rotateSpeed = 0;
         autoMove = false;
         GetComponent<CircleCollider2D>().enabled = false;
-        
     }
 
     // Use this for initialization
@@ -69,9 +72,12 @@ public class PlayerBehavior : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-        _boostTime = Mathf.Max(_boostTime-Time.deltaTime,0);
-        _shieldTime = Mathf.Max(_shieldTime - Time.deltaTime, 0);
-        checkInput();
+        if(!endgame)
+        {
+            _boostTime = Mathf.Max(_boostTime - Time.deltaTime, 0);
+            _shieldTime = Mathf.Max(_shieldTime - Time.deltaTime, 0);
+            checkInput();
+        }
         drawLives();
 	}
     void drawLives()
