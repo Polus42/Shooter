@@ -58,14 +58,21 @@ public class SenpaiController : MonoBehaviour {
     
     public GameObject greyBackground;
 
-    List<List<UnityAction>> missionsAvailable;
-    List<UnityAction> currentMissions;
-    UnityAction lastMission = null;
-
+    //Rajout pour missions "dynamiques" en fonction de la phase
+    private List<List<UnityAction>> missionsAvailable;
+    private List<UnityAction> currentMissions;
+    private UnityAction lastMission = null;
     private Coroutine currentCoroutineMission;
+    //Messages en attente d'affichage
+    private List<IEnumerator> messagesWaiting;
+    private Coroutine isSayingSomething;
+
+    public float slowTimeScale = 0.1f;
 
     void Awake()
     {
+        messagesWaiting = new List<IEnumerator>();
+
         // Declare the list of missions per phase
         missionsAvailable = new List<List<UnityAction>>();
         missionsAvailable.Add(new List<UnityAction>());
@@ -96,6 +103,11 @@ public class SenpaiController : MonoBehaviour {
     // Use this for initialization
     void Start() {
         _health = startingHealth;
+
+        //say("pwet pwet", 5, false);
+        //say("omg :D", 2, true);
+        //say("turn turn", 3, false);
+
         StartCoroutine(startMissionSystem());
 
         InfoScore = GameObject.Find("Canvas").GetComponent<infoScore>();
@@ -175,27 +187,51 @@ public class SenpaiController : MonoBehaviour {
             GUI.Box(new Rect(v2.x-messageSize.x/2, Screen.height- v2.y-messageSize.y/2, messageSize.x, messageSize.y), _whatimsaying);
         }
     }
-    void say(string whatisay,float timelasting)
+
+    void say(string whatisay, float timelasting, bool slowTime)
     {
+        if(isSayingSomething != null)
+        {
+            messagesWaiting.Add(initSaying(timelasting, whatisay, slowTime));
+            return;
+        }
+
         GetComponents<AudioSource>()[0].Play();
-        StartCoroutine(initSaying(timelasting,whatisay));
-        greyBackground.SetActive(true);
+        isSayingSomething = StartCoroutine(initSaying(timelasting, whatisay, slowTime));
+        
     }
-    IEnumerator initSaying(float time,string text)
+
+    IEnumerator initSaying(float time,string text, bool slowTime)
     {
-        Time.timeScale = 0.1f;
+        if(slowTime)
+        {
+            greyBackground.SetActive(true);
+            Time.timeScale = slowTimeScale;
+        }
+            
         _whatimsaying =text;
-        yield return new WaitForSeconds(time*0.1f);
+        yield return new WaitForSeconds(time * ((slowTime) ? slowTimeScale : 1));
         _whatimsaying = "";
-        Time.timeScale = 1;
-        greyBackground.SetActive(false);
+
+        if (slowTime)
+        {
+            Time.timeScale = 1;
+            greyBackground.SetActive(false);
+        }
+
+        if(messagesWaiting.Count > 0)
+        {
+            IEnumerator messageWaiting = messagesWaiting[0];
+            messagesWaiting.Remove(messageWaiting);
+            isSayingSomething = StartCoroutine(messageWaiting);
+        }
     }
     // Missions d'entraide ///////////////////////////////////
     // Misssion Destroy Weakpoint ///////////////////////////////////
     void startMissionDestroyWeakpoint(float tempsmission)
     {
         _MissionDestroyWeakpoint = true;
-        say(destroyWeakpointPhrase, missionTextTime);
+        say(destroyWeakpointPhrase, missionTextTime, true);
         currentCoroutineMission = StartCoroutine(checkMissionDestroyWeakpoint(tempsmission));
     }
     IEnumerator checkMissionDestroyWeakpoint(float temps)
@@ -231,7 +267,7 @@ public class SenpaiController : MonoBehaviour {
     void startMissionAttackSun(float tempsmission)
     {
         _MissionAttackSun = true;
-        say(attackSunPhrase, missionTextTime);
+        say(attackSunPhrase, missionTextTime, true);
         currentCoroutineMission = StartCoroutine(checkMissionAttackSun(tempsmission));
     }
     IEnumerator checkMissionAttackSun(float temps)
@@ -286,7 +322,7 @@ public class SenpaiController : MonoBehaviour {
     void startMissionStayNearMe(float tempsmission)
     {
         _MissionStayNearMe = true;
-        say(staynearmePhrase, missionTextTime);
+        say(staynearmePhrase, missionTextTime, true);
         currentCoroutineMission = StartCoroutine(checkMissionStayNearMe(tempsmission));
     }
     IEnumerator checkMissionStayNearMe(float temps)
@@ -362,7 +398,7 @@ public class SenpaiController : MonoBehaviour {
     void startMissionStopFireing(float tempsmission)
     {
         _MissionStopFireing = true;
-        say(stopFireingPhrase, missionTextTime);
+        say(stopFireingPhrase, missionTextTime, true);
         currentCoroutineMission = StartCoroutine(checkMissionStopFireing(tempsmission));
     }
     IEnumerator checkMissionStopFireing(float temps)
@@ -421,7 +457,7 @@ public class SenpaiController : MonoBehaviour {
     void startMissionGetAway(float tempsmission)
     {
         _MissionGetAway = true;
-        say(getAwayPhrase, missionTextTime);
+        say(getAwayPhrase, missionTextTime, true);
         currentCoroutineMission = StartCoroutine(checkMissionGetAway(tempsmission));
     }
     IEnumerator checkMissionGetAway(float temps)

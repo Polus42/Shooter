@@ -1,19 +1,19 @@
 fileFormatVersion: 2
-guid: d3910b04eb7fc214e887f87ea5b089d0
-timeCreated: 1480835418
+guid: 12ad04d1932e1d64da9a9c44f0513187
+timeCreated: 1480835445
 licenseType: Free
 TextureImporter:
   fileIDToRecycleName:
-    21300000: spritesheet-rayons_0
-    21300002: spritesheet-rayons_1
-    21300004: spritesheet-rayons_2
-    21300006: spritesheet-rayons_3
-    21300008: spritesheet-rayons_4
-    21300010: spritesheet-rayons_5
-    21300012: spritesheet-rayons_6
-    21300014: spritesheet-rayons_7
-    21300016: spritesheet-rayons_8
-    21300018: spritesheet-rayons_9
+    21300000: spritesheet-rayons-courts_0
+    21300002: spritesheet-rayons-courts_1
+    21300004: spritesheet-rayons-courts_2
+    21300006: spritesheet-rayons-courts_3
+    21300008: spritesheet-rayons-courts_4
+    21300010: spritesheet-rayons-courts_5
+    21300012: spritesheet-rayons-courts_6
+    21300014: spritesheet-rayons-courts_7
+    21300016: spritesheet-rayons-courts_8
+    21300018: spritesheet-rayons-courts_9
   serializedVersion: 2
   mipmaps:
     mipMapMode: 0
@@ -63,12 +63,12 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: spritesheet-rayons_0
+      name: spritesheet-rayons-courts_0
       rect:
         serializedVersion: 2
         x: 0
         y: 1800
-        width: 2000
+        width: 1124
         height: 200
       alignment: 4
       pivot: {x: 0, y: 0.5}
@@ -76,12 +76,12 @@ TextureImporter:
       outline: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: spritesheet-rayons_1
+      name: spritesheet-rayons-courts_1
       rect:
         serializedVersion: 2
         x: 0
         y: 1600
-        width: 2000
+        width: 1124
         height: 200
       alignment: 4
       pivot: {x: 0, y: 0.5}
@@ -89,12 +89,12 @@ TextureImporter:
       outline: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: spritesheet-rayons_2
+      name: spritesheet-rayons-courts_2
       rect:
         serializedVersion: 2
         x: 0
         y: 1400
-        width: 2000
+        width: 1124
         height: 200
       alignment: 4
       pivot: {x: 0, y: 0.5}
@@ -102,12 +102,12 @@ TextureImporter:
       outline: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: spritesheet-rayons_3
+      name: spritesheet-rayons-courts_3
       rect:
         serializedVersion: 2
         x: 0
         y: 1200
-        width: 2000
+        width: 1124
         height: 200
       alignment: 4
       pivot: {x: 0, y: 0.5}
@@ -115,12 +115,12 @@ TextureImporter:
       outline: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: spritesheet-rayons_4
+      name: spritesheet-rayons-courts_4
       rect:
         serializedVersion: 2
         x: 0
         y: 1000
-        width: 2000
+        width: 1124
         height: 200
       alignment: 4
       pivot: {x: 0, y: 0.5}
@@ -128,12 +128,12 @@ TextureImporter:
       outline: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: spritesheet-rayons_5
+      name: spritesheet-rayons-courts_5
       rect:
         serializedVersion: 2
         x: 0
         y: 800
-        width: 2000
+        width: 1124
         height: 200
       alignment: 4
       pivot: {x: 0, y: 0.5}
@@ -141,12 +141,12 @@ TextureImporter:
       outline: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: spritesheet-rayons_6
+      name: spritesheet-rayons-courts_6
       rect:
         serializedVersion: 2
         x: 0
         y: 600
-        width: 2000
+        width: 1124
         height: 200
       alignment: 4
       pivot: {x: 0, y: 0.5}
@@ -154,12 +154,12 @@ TextureImporter:
       outline: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: spritesheet-rayons_7
+      name: spritesheet-rayons-courts_7
       rect:
         serializedVersion: 2
         x: 0
         y: 400
-        width: 2000
+        width: 1124
         height: 200
       alignment: 4
       pivot: {x: 0, y: 0.5}
@@ -167,12 +167,12 @@ TextureImporter:
       outline: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: spritesheet-rayons_8
+      name: spritesheet-rayons-courts_8
       rect:
         serializedVersion: 2
         x: 0
         y: 200
-        width: 2000
+        width: 1124
         height: 200
       alignment: 4
       pivot: {x: 0, y: 0.5}
@@ -180,12 +180,12 @@ TextureImporter:
       outline: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: spritesheet-rayons_9
+      name: spritesheet-rayons-courts_9
       rect:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 2000
+        width: 1124
         height: 200
       alignment: 4
       pivot: {x: 0, y: 0.5}

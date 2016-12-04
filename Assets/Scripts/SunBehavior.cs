@@ -59,10 +59,12 @@ public class SunBehavior : MonoBehaviour {
         RotationPattern rotationPattern = new RotationPattern(this);
         CyclicPattern cyclicPattern = new CyclicPattern(this);
         WavePattern wavePattern = new WavePattern(this);
+        LaserPattern laserPattern = new LaserPattern(this);
 
         patternsAvailable.Add("RotationPattern", rotationPattern);
         patternsAvailable.Add("CyclicPattern", cyclicPattern);
         patternsAvailable.Add("WavePattern", wavePattern);
+        patternsAvailable.Add("LaserPattern", laserPattern);
 
         //Take damage or not
         EventManager.StartListening("OnSurvivalPhase", goVulnerable);

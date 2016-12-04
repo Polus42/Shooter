@@ -29,6 +29,21 @@ public class PlayerBehavior : MonoBehaviour {
     private bool _shield = false;
     public GameObject particles;
 
+    void Awake()
+    {
+        EventManager.StartListening("WeakPointDestroyed", lifeUp);
+    }
+
+    //Regain de vie
+    void lifeUp()
+    {
+        Debug.Log("LIFE UP !");
+        if(_health < startingHealth)
+        {
+            _health++;
+        }
+    }
+
     // Use this for initialization
     void Start () {
         // assigning cursor

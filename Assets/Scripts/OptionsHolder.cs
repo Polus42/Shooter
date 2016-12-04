@@ -62,6 +62,9 @@ public class OptionsHolder
                     case "CyclicPattern":
                         pa = new CyclicPatternOP();
                         break;
+                    case "LaserPattern":
+                        pa = new LaserPatternOP();
+                        break;
                     default:
                         Debug.Log("PATTERN JSON NULL");
                         pa = null;
@@ -181,6 +184,15 @@ public class OptionsHolder
         public float radius;
         public int count;
         public float angleVariation;
+    }
+
+    [Serializable]
+    public class LaserPatternOP : IOptionPattern
+    {
+        public float frequency;
+        public float duration;
+        public float startTime;
+        public float rotationSpeed;
     }
 
     private void computeProbs()

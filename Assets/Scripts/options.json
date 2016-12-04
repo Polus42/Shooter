@@ -29,7 +29,7 @@
 			"SurvivalPhase": {
 				"RotationPattern_V1" : {
 					"name": "RotationPattern",
-					"probability": 0.0,
+					"probability": 0,
 					"cooldown": 10,//time cant be used
 					"bulletspeed" : 1.5,
 					"frequency": 0.5,//with duration and frequency you can guess the number of waves
@@ -70,7 +70,7 @@
 				},
 				"CyclicPattern_V1" : { //OK
 					"name": "CyclicPattern",
-					"probability": 1,
+					"probability": 0,
 					"cooldown": 30,
 					"angle": 1,
 					"frequency": 0.3,
@@ -79,6 +79,15 @@
 					"count": 10,
 					"bulletspeed": 1.5,
 					"angleVariation": -2,//negatif pour inverser
+				},
+				"Laser1" : { //OK
+					"name": "LaserPattern",
+					"probability": 1,
+					"cooldown": 0,
+					"frequency": 5,
+					"duration": 10,
+					"startTime": 2,
+					"rotationSpeed": 0.5
 				}
 			},
 			"CounterPhase": {
