@@ -15,13 +15,29 @@ public class AnimatedLaser : MonoBehaviour {
 
     void Start()
     {
+    //    
+    }
+
+    void Awake()
+    {
         animator = this.GetComponent<Animator>();
-        StartCoroutine(toBig());
+    }
+
+    Coroutine toBigCoroutine;
+
+    void OnEnable()
+    {
+        GetComponents<AudioSource>()[0].Play();
+        animator.Rebind();
+        if (toBigCoroutine == null)
+            StopCoroutine(toBigCoroutine);
+        toBigCoroutine = StartCoroutine(toBig());
     }
 
     IEnumerator toBig()
     {
         yield return new WaitForSeconds(timeBeforeBig);
+        GetComponents<AudioSource>()[1].Play();
         animator.SetBool("isBig", true);
     }
 

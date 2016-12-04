@@ -124,6 +124,8 @@ public class RotationPattern : IPattern
 
     void emitProjectile()
     {
+        if(! sb.GetComponents<AudioSource>()[2].isPlaying)
+            sb.GetComponents<AudioSource>()[2].Play();
         GameObject lastBullet = null;
         for (int i = 0; i < options.numberHelixes; i++)
         {

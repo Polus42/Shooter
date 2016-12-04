@@ -13,6 +13,7 @@ public class AsteroidBehavior : MonoBehaviour {
 
     void Start()
     {
+        GetComponents<AudioSource>()[0].Play();
         OptionsManager.Instance.getAsteroidOptions(out asteroidOP);
         rb = GetComponent<Rigidbody2D>();
         rb.angularVelocity = Random.Range(-1f, 1f) * Random.Range(asteroidOP.rotateMin, asteroidOP.rotateMax);
