@@ -104,9 +104,9 @@ public class SenpaiController : MonoBehaviour {
     void Start() {
         _health = startingHealth;
 
-        //say("pwet pwet", 5, false);
-        //say("omg :D", 2, true);
-        //say("turn turn", 3, false);
+        say("pwet pwet", 5, false);
+        say("omg :D", 2, true);
+        say("turn turn", 3, false);
 
         StartCoroutine(startMissionSystem());
 
@@ -201,7 +201,7 @@ public class SenpaiController : MonoBehaviour {
         
     }
 
-    IEnumerator initSaying(float time,string text, bool slowTime)
+    IEnumerator initSaying(float time, string text, bool slowTime)
     {
         if(slowTime)
         {
@@ -209,7 +209,7 @@ public class SenpaiController : MonoBehaviour {
             Time.timeScale = slowTimeScale;
         }
             
-        _whatimsaying =text;
+        _whatimsaying = text;
         yield return new WaitForSeconds(time * ((slowTime) ? slowTimeScale : 1));
         _whatimsaying = "";
 
