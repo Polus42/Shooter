@@ -43,7 +43,7 @@ public class SunBehavior : MonoBehaviour {
 
     private Transform weakPoint;
 
-    private bool block = false;//avoid taking damage in triggerevent
+    private bool block = true;//avoid taking damage in triggerevent
 
     //Rotation
     private int _currentdirection = -1;
@@ -82,6 +82,9 @@ public class SunBehavior : MonoBehaviour {
         EventManager.StartListening("OnCounterPhase", allowMovement);
         EventManager.StartListening("OnAdaptationPhase", restrictMovement);
 
+        EventManager.StartListening("OutroOver", doExplode);
+        EventManager.StartListening("EndGame", willExplode);
+
         cc = GetComponent<CircleCollider2D>();
 
         //coroutine = SelectingPaterns();
@@ -101,6 +104,20 @@ public class SunBehavior : MonoBehaviour {
         OptionsManager.Instance.getPatternsOptions(out patternsOP);
         OptionsManager.Instance.getCurrentPatterns(out patterns);
         OptionsManager.Instance.getProbs(out probs);
+    }
+
+    void willExplode()
+    {
+        GetComponent<SpriteRenderer>().sprite = hurtSprite;
+    }
+
+    public GameObject explodePrefab;
+
+    void doExplode()
+    {
+        //animation
+        gameObject.SetActive(false);
+        Instantiate(explodePrefab, this.transform.position, Quaternion.identity);
     }
 
     private void goInvicible()

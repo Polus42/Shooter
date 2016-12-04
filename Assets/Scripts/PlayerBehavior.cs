@@ -32,6 +32,7 @@ public class PlayerBehavior : MonoBehaviour {
     void Awake()
     {
         EventManager.StartListening("WeakPointDestroyed", lifeUp);
+        EventManager.StartListening("EndGame", stopMoving);
     }
 
     //Regain de vie
@@ -42,6 +43,13 @@ public class PlayerBehavior : MonoBehaviour {
         {
             _health++;
         }
+    }
+
+    void stopMoving()
+    {
+        autoMove = false;
+        GetComponent<CircleCollider2D>().enabled = false;
+        
     }
 
     // Use this for initialization
@@ -112,6 +120,7 @@ public class PlayerBehavior : MonoBehaviour {
             _health -= amount;
             if (_health <= 0)
             {
+                EventManager.TriggerEvent("PlayerDead");
                 Destroy(gameObject);
             }
             else

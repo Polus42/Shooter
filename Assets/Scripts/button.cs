@@ -22,7 +22,7 @@ public class button : MonoBehaviour {
             
                 if (play)
                 {
-                SceneManager.LoadScene("Main");
+                    SceneManager.LoadScene("tutorial");
                 }
                 else
                 {

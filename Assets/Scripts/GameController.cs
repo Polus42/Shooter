@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.SceneManagement;
 
 public class GameController : MonoBehaviour {
     private IMainPhase currentPhase;
@@ -29,10 +30,63 @@ public class GameController : MonoBehaviour {
         EventManager.StartListening("AdaptationEnded", goToSurvivalPhase);
 
         EventManager.StartListening("IntroOver", startPhases);
+
+        EventManager.StartListening("PlayerDead", playerDead);
     }
     
 	void Start () {
         
+    }
+
+    public GameObject uiPanelGameOver;
+    public GameObject uiPanelVictory;
+
+    void endGame()
+    {
+        currentPhase = null;
+        EventManager.TriggerEvent("EndGame");
+        //uiPanelVictory.SetActive(true);
+    }
+
+    void playerDead()
+    {
+        currentPhase = null;
+        uiPanelGameOver.SetActive(true);
+        //SceneManager.LoadScene("Menu");
+        StartCoroutine(SwitchScene());
+    }
+
+    private IEnumerator SwitchScene()
+    {
+        //load new scene
+        AsyncOperation loadNewScene = SceneManager.LoadSceneAsync("Menu");
+
+        while (!loadNewScene.isDone)
+        {
+            yield return new WaitForEndOfFrame();
+        }
+
+        print("Scene Loaded");
+
+        //unload current/old scene
+        bool unloaded = SceneManager.UnloadScene(0);
+
+        while (!unloaded)
+        {
+            yield return new WaitForEndOfFrame();
+        }
+
+        print("Scene Unloaded");
+
+        //unload the unused assets/lightmaps
+        AsyncOperation unloadCurrentSceneAssets = Resources.UnloadUnusedAssets();
+
+        while (!unloadCurrentSceneAssets.isDone)
+        {
+            yield return new WaitForEndOfFrame();
+        }
+
+        print("Unused Assets Removed");
     }
 
     void startPhases()
@@ -66,8 +120,10 @@ public class GameController : MonoBehaviour {
         if (currentLoopDifficulty > maxDifficulty - 1)
         {
             Debug.Log("end game");
+            endGame();
         }
-        OptionsManager.Instance.changeDifficulty(currentLoopDifficulty);
+        else
+            OptionsManager.Instance.changeDifficulty(currentLoopDifficulty);
     }
 
     public void goToAdaptationPhase()

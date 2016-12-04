@@ -101,6 +101,8 @@ public class SenpaiController : MonoBehaviour {
         EventManager.StartListening("OnSurvivalPhase", () => switchPhase(0));
         EventManager.StartListening("OnCounterPhase", () => switchPhase(1));
         EventManager.StartListening("OnAdaptationPhase", () => switchPhase(2));
+
+        EventManager.StartListening("EndGame", launchOutro);
     }
 
     // Use this for initialization
@@ -114,12 +116,63 @@ public class SenpaiController : MonoBehaviour {
 
     IEnumerator introSpeaking()
     {
-        say("pwet pwet", 2, false);
-        //say("omg :D", 2, true);
-        say("turn turn", 2, false);
-        yield return new WaitForSeconds(5f);
+        say("le soleil pique une crise !", 2, true);
+        say("detruisez-le avant qu'il\nne nous carbonise !", 2, true);
+        say("lorsqu'il explosera…\nje pourrais m'echapper", 2, true);
+        say("mais je n'aurais qu'une\nseule place à bord", 2, true);
+        say("si vous voulez survivre\nfaites-moi plaisir !", 2, true);
+        say("ha ha ha !", 2, false);
+
+        yield return new WaitForSeconds(12f);
         EventManager.TriggerEvent("IntroOver");
         StartCoroutine(startMissionSystem());
+    }
+
+    void launchOutro()
+    {
+        StopAllCoroutines();
+
+        rotateSpeed = 0;
+
+        //tp most valuable player
+        GameObject p1 = GameObject.Find("Player2");
+        GameObject p2 = GameObject.Find("Player2");
+        GameObject winner;
+        if (p2.GetComponent<PlayerBehavior>()._PF > p1.GetComponent<PlayerBehavior>()._PF)
+        {
+            winner = p2;
+        }
+        else
+        {
+            winner = p1;
+        }
+
+        float xLeftRight = transform.position.x;
+        int offset = -20;
+
+        if (xLeftRight > 0)
+        {
+            offset = -offset;
+        }
+
+        winner.transform.position = new Vector3(transform.position.x + offset, transform.position.y, transform.position.z);
+
+        StartCoroutine(outroSpeaking(winner));
+    }
+
+    IEnumerator outroSpeaking(GameObject winner)
+    {
+        say("bien joue\nil va peter !", 2, false);
+        say("maintenant il est\ntemps de partir", 2, false);
+        say("viens, tu es mon\njoueur prefere", 2, false);
+        say("bye bye !", 2, false);
+
+        yield return new WaitForSeconds(12f);
+
+        this.gameObject.SetActive(false);
+        winner.gameObject.SetActive(false);
+
+        EventManager.TriggerEvent("OutroOver");
     }
 
     private void switchPhase(int index)
@@ -262,9 +315,9 @@ public class SenpaiController : MonoBehaviour {
         if (_MissionDestroyWeakpoint)
         {
             if (GameObject.Find("Player1") != null)
-                GameObject.Find("Player1").GetComponent<PlayerBehavior>()._PF += pointsOnWeakpointDestroyed;
+                GameObject.Find("Player1").GetComponent<PlayerBehavior>()._PF += pointsOnWeakpointDestroyed +1;//besoin impair pour pas egalite
             if (GameObject.Find("Player2")!= null)
-                GameObject.Find("Player2").GetComponent<PlayerBehavior>()._PF += pointsOnWeakpointDestroyed;
+                GameObject.Find("Player2").GetComponent<PlayerBehavior>()._PF += pointsOnWeakpointDestroyed +1;
             _MissionDestroyWeakpoint = false;
             InfoScore.weakPointDestroyed_J1();
         }

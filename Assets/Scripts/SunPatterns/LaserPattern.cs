@@ -25,14 +25,14 @@ public class LaserPattern : IPattern
     public LaserPattern(SunBehavior sb)
     {
         this.sb = sb;
-        animatedLaser = this.sb.gameObject.transform.GetChild(1);
-        players = GameObject.FindGameObjectsWithTag("Player");
     }
 
     public void setOptions(OptionsHolder.IOptionPattern options)
     {
         this.options = (OptionsHolder.LaserPatternOP)options;
         counterTime = startTime;
+        animatedLaser = this.sb.gameObject.transform.GetChild(1);
+        players = GameObject.FindGameObjectsWithTag("Player");
         target = selectTarget();
     }
 
