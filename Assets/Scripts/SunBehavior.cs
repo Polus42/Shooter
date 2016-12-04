@@ -119,6 +119,7 @@ public class SunBehavior : MonoBehaviour {
 
         canMove = false;
 
+        /*
         if (launchSelecting != null)
         {
             StopCoroutine(launchSelecting);
@@ -133,6 +134,8 @@ public class SunBehavior : MonoBehaviour {
         {
             StopCoroutine(beHurtCo);
         }
+        */
+        StopAllCoroutines();
 
         currentPattern = null;
 
