@@ -25,6 +25,6 @@ public class PlayerProjectile : MonoBehaviour {
     void OnCollisionEnter2D(Collision2D coll)
     {
         if (coll.gameObject.name == "Sun")
-            Destroy(gameObject, Random.Range(0.2f,0.3f));
+            Destroy(gameObject, Random.Range(0.15f,0.25f));
     }
 }
