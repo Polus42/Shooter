@@ -3,7 +3,7 @@
 		"General": {
 			"gravity": 10.2,//useless
 			"adaptationPhaseDuration": 20,
-			"asteroidFrequency": 2,
+			"asteroidFrequency": 3,
 		},
 		"Asteroid": {
 			"force": 100,
@@ -11,8 +11,8 @@
 			"rotateMax": 50,
 		},
 		"Sun": {
-			"health": 20,
-			"weakPointHealth": 3,
+			"health": 80,
+			"weakPointHealth": 20,
 			"force": 100,
 			"minWaitMove": 5,
 			"maxWaitMove": 10,
@@ -21,46 +21,178 @@
 			"pauseTimeBetweenPhase": 3
 		},
 		"PatternsOptions": {
-			"startWait": 3,//Start waiting time (in addition of pauseTimeBetweenPhase)
-			"waveWait":10,//waiting time before selecting new pattern
-			"nextWait":10,//general duration for all pattern
+			"startWait": 0,//Start waiting time (in addition of pauseTimeBetweenPhase)
+			"waveWait":5,//waiting time before selecting new pattern
+			"nextWait":20,//general duration for all pattern
 		},
 		"Patterns": {//patterns used for difficulty 1
 			"SurvivalPhase": {
-				"RotationPattern_V1" : {
+				"WavePattern" : { //OK
+					"name": "WavePattern",
+					"probability": 0.6,
+					"cooldown": 0,
+					"frequency": 0.8,
+					"angleAdd": 360,
+					"radius":0.4,
+					"count":6,
+					"bulletspeed": 0.4,
+					"multiplicatorSpeed":1,
+					"angleWillVariateExtern":true,
+					"angleVariationExtern":2,
+					"angleWillVariateIntern":true,
+					"chaosOn": false,
+					"forceAType":0,
+					"durationMin": 4,
+					"durationMax": 4,
+				},
+				"CyclicPattern_V1" : { //OK
+					"name": "CyclicPattern",
+					"probability": 0.2,
+					"cooldown": 30,
+					"angle": 1,
+					"frequency": 0.2,
+					"mult": 1,
+					"radius": 0.4,
+					"count": 3,
+					"bulletspeed": 1.5,
+					"angleVariation": 2,//negatif pour inverser
+				},
+			},
+			"CounterPhase": {
+				"WavePattern" : { //OK
+					"name": "WavePattern",
+					"probability": 0.6,
+					"cooldown": 0,
+					"frequency": 0.8,
+					"angleAdd": 360,
+					"radius":0.4,
+					"count":4,
+					"bulletspeed": 0.7,
+					"multiplicatorSpeed":1.4,
+					"angleWillVariateExtern":true,
+					"angleVariationExtern":2,
+					"angleWillVariateIntern":true,
+					"chaosOn": false,
+					"forceAType":-1,
+					"durationMin": 4,
+					"durationMax": 4,
+				},
+			},
+			"AdaptationPhase": {
+				"RotationPattern_V3" : {
 					"name": "RotationPattern",
-					"probability": 0,
-					"cooldown": 10,//time cant be used
-					"bulletspeed" : 1.5,
-					"frequency": 0.5,//with duration and frequency you can guess the number of waves
-					//Overrides
-					"waitAfter": 5,//override waveWait
-					"durationMin": 15,//override nextWait
+					"probability": 0.5,
+					"cooldown": 25,
+					"frequency": 0.1,
+					"angle": 90,
+					"radius": 1.5,
+					"bulletSpeed": 2,
+					"rotatingSpeed": 20,
+					"changeDirection": 1,
+					"repeatChangeDirection": false,
+					"maxRadius": 4,
+					"numberHelixes": 4,
+					"durationMin": 10,//override nextWait
 					"durationMax": 20,//override nextWait // max jamais atteint 9.9999
 				},
+				"RotationPattern_V4" : {
+					"name": "RotationPattern",
+					"probability": 0.5,
+					"cooldown": 25,
+					"frequency": 0.1,
+					"angle": 90,
+					"radius": 1.5,
+					"bulletSpeed": 2,
+					"rotatingSpeed": -20,
+					"changeDirection": 1,
+					"repeatChangeDirection": false,
+					"maxRadius": 4,
+					"numberHelixes": 4,
+					"durationMin": 10,//override nextWait
+					"durationMax": 20,//override nextWait // max jamais atteint 9.9999
+				},
+			},
+		},
+	},
+	"1": {
+		"General": {
+			"gravity": 10.2,//useless
+			"adaptationPhaseDuration": 24,
+			"asteroidFrequency": 2,
+		},
+		"Asteroid": {
+			"force": 100,
+			"rotateMin": 10,
+			"rotateMax": 50,
+		},
+		"Sun": {
+			"health": 80,
+			"weakPointHealth": 30,
+			"force": 100,
+			"minWaitMove": 5,
+			"maxWaitMove": 10,
+			"timeStatic": 1,
+			"rotatingSpeed": 30,
+			"pauseTimeBetweenPhase": 3
+		},
+		"PatternsOptions": {
+			"startWait": 0,//Start waiting time (in addition of pauseTimeBetweenPhase)
+			"waveWait":5,//waiting time before selecting new pattern
+			"nextWait":20,//general duration for all pattern
+		},
+		"Patterns": {//patterns used for difficulty 1
+			"SurvivalPhase": {
 				"RotationPattern_V2" : { //OK
 					"name": "RotationPattern",
-					"probability": 0,
+					"probability": 0.3,
 					"cooldown": 10,
-					"frequency": 0.3,
+					"frequency": 0.4,
 					"angle": 90,
 					"radius": 0.4,
 					"bulletSpeed": 1.5,
-					"rotatingSpeed": 20,
-					"changeDirection": 3,
+					"rotatingSpeed": 30,
+					"changeDirection": 6,
 					"repeatChangeDirection": true,
 					"maxRadius": 5,
-					"numberHelixes": 4
+					"numberHelixes": 4,
+					"durationMin": 12, //override nextWait
+					"durationMax": 12, //override nextWait // max jamais atteint 9.9999
 				},
+				"CyclicPattern_V1" : { //OK
+					"name": "CyclicPattern",
+					"probability": 0.4,
+					"cooldown": 30,
+					"angle": 1,
+					"frequency": 0.4,
+					"mult": 1,
+					"radius": 0.4,
+					"count": 5,
+					"bulletspeed": 1.5,
+					"angleVariation": -3,//negatif pour inverser
+				},
+					"CyclicPattern_V2" : { //OK
+					"name": "CyclicPattern",
+					"probability": 0.4,
+					"cooldown": 30,
+					"angle": 1,
+					"frequency": 0.4,
+					"mult": 1,
+					"radius": 0.4,
+					"count": 5,
+					"bulletspeed": 1.5,
+					"angleVariation": 3,//negatif pour inverser
+				},
+			},
+			"CounterPhase": {
 				"WavePattern" : { //OK
 					"name": "WavePattern",
-					"probability": 0,
+					"probability": 0.3,
 					"cooldown": 0,
-					"frequency": 0.5,
+					"frequency": 1,
 					"angleAdd": 360,
 					"radius":0.4,
-					"count":20,
-					"bulletspeed": 0.5,
+					"count":8,
+					"bulletspeed": 0.2,
 					"multiplicatorSpeed":1,
 					"angleWillVariateExtern":true,
 					"angleVariationExtern":2,
@@ -68,41 +200,6 @@
 					"chaosOn": false,
 					"forceAType":-1
 				},
-				"CyclicPattern_V1" : { //OK
-					"name": "CyclicPattern",
-					"probability": 0,
-					"cooldown": 30,
-					"angle": 1,
-					"frequency": 0.3,
-					"mult": 1,
-					"radius": 0.4,
-					"count": 10,
-					"bulletspeed": 1.5,
-					"angleVariation": -2,//negatif pour inverser
-				},
-				"Laser1" : { //OK
-					"name": "LaserPattern",
-					"probability": 1,
-					"cooldown": 0,
-					"frequency": 5,
-					"duration": 10,
-					"startTime": 2,
-					"rotationSpeed": 0.5
-				}
-			},
-			"CounterPhase": {
-				"CyclicPattern_V1" : { //OK
-					"name": "CyclicPattern",
-					"probability": 0.8,
-					"cooldown": 30,
-					"angle": 1,
-					"frequency": 0.3,
-					"mult": 1,
-					"radius": 0.4,
-					"count": 10,
-					"bulletspeed": 1.5,
-					"angleVariation": 2
-				}
 			},
 			"AdaptationPhase": {
 				"RotationPattern_V3" : {
@@ -117,9 +214,145 @@
 					"changeDirection": 1,
 					"repeatChangeDirection": true,
 					"maxRadius": 5,
-					"numberHelixes": 2
-				}
-			}
+					"numberHelixes": 4
+				},
+					"Laser1" : { //OK
+					"name": "LaserPattern",
+					"probability": 0.3,
+					"cooldown": 0,
+					"frequency": 5,
+					"duration": 10,
+					"startTime": 2,
+					"rotationSpeed": 0.5
+				},
+			},
+		},
+	},
+	"2": {
+		"General": {
+			"gravity": 10.2,//useless
+			"adaptationPhaseDuration": 28,
+			"asteroidFrequency": 2,
+		},
+		"Asteroid": {
+			"force": 100,
+			"rotateMin": 10,
+			"rotateMax": 50,
+		},
+		"Sun": {
+			"health": 80,
+			"weakPointHealth": 40,
+			"force": 100,
+			"minWaitMove": 5,
+			"maxWaitMove": 10,
+			"timeStatic": 1,
+			"rotatingSpeed": 30,
+			"pauseTimeBetweenPhase": 3
+		},
+		"PatternsOptions": {
+			"startWait": 0,//Start waiting time (in addition of pauseTimeBetweenPhase)
+			"waveWait":5,//waiting time before selecting new pattern
+			"nextWait":20,//general duration for all pattern
+		},
+		"Patterns": {//patterns used for difficulty 1
+			"SurvivalPhase": {
+				"RotationPattern_V2" : { //OK
+					"name": "RotationPattern",
+					"probability": 0.3,
+					"cooldown": 10,
+					"frequency": 0.3,
+					"angle": 90,
+					"radius": 0.4,
+					"bulletSpeed": 1.5,
+					"rotatingSpeed": 30,
+					"changeDirection": 3,
+					"repeatChangeDirection": true,
+					"maxRadius": 5,
+					"numberHelixes": 4
+				},
+				"CyclicPattern_V1" : { //OK
+					"name": "CyclicPattern",
+					"probability": 0.4,
+					"cooldown": 30,
+					"angle": 1,
+					"frequency": 0.2,
+					"mult": 1,
+					"radius": 0.4,
+					"count": 10,
+					"bulletspeed": 1.5,
+					"angleVariation": -2,//negatif pour inverser
+				},
+					"CyclicPattern_V2" : { //OK
+					"name": "CyclicPattern",
+					"probability": 0.4,
+					"cooldown": 30,
+					"angle": 1,
+					"frequency": 0.2,
+					"mult": 1,
+					"radius": 0.4,
+					"count": 10,
+					"bulletspeed": 1.5,
+					"angleVariation": 2,//negatif pour inverser
+				},
+			},
+			"CounterPhase": {
+			"WavePattern" : { //OK
+					"name": "WavePattern",
+					"probability": 0.3,
+					"cooldown": 0,
+					"frequency": 0.5,
+					"angleAdd": 180,
+					"radius":0.4,
+					"count":10,
+					"bulletspeed": 0.5,
+					"multiplicatorSpeed":1,
+					"angleWillVariateExtern":true,
+					"angleVariationExtern":2,
+					"angleWillVariateIntern":true,
+					"chaosOn": false,
+					"forceAType":-1
+				},
+				"CyclicPattern_V1" : { //OK
+					"name": "CyclicPattern",
+					"probability": 0.3,
+					"cooldown": 30,
+					"angle": 1,
+					"frequency": 0.3,
+					"mult": 1,
+					"radius": 0.4,
+					"count": 10,
+					"bulletspeed": 1.5,
+					"angleVariation": 2
+				},
+			},
+			"AdaptationPhase": {
+					"Laser1" : { //OK
+					"name": "LaserPattern",
+					"probability": 0.3,
+					"cooldown": 0,
+					"frequency": 5,
+					"duration": 10,
+					"startTime": 2,
+					"rotationSpeed": 0.5
+				},
+				"WavePattern" : { //OK
+					"name": "WavePattern",
+					"probability": 1,
+					"cooldown": 0,
+					"frequency": 1,
+					"angleAdd": 90,
+					"radius":0.4,
+					"count":10,
+					"bulletspeed": 0.8,
+					"multiplicatorSpeed":1,
+					"angleWillVariateExtern":true,
+					"angleVariationExtern":0.2,
+					"angleWillVariateIntern":true,
+					"chaosOn": false,
+					"forceAType":-1
+					"waitAfter": 1,//override waveWait
+				},
+			},
 		},
 	},
 }

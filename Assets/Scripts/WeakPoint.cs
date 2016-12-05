@@ -53,9 +53,13 @@ public class WeakPoint : MonoBehaviour {
 
     void OnTriggerEnter2D(Collider2D other)
     {
-        if (canBeTouched && other.gameObject.GetComponent<PlayerProjectile>() != null && _health > 0)
+        if (other.gameObject.GetComponent<PlayerProjectile>() == null)
+            return;
+
+        Destroy(other.gameObject);
+
+        if (canBeTouched && _health > 0)
         {
-            Destroy(other.gameObject);
             canBeTouched = false;
             Debug.Log("weak point health: " + _health);
             _health--;

@@ -97,6 +97,7 @@ public class SunBehavior : MonoBehaviour {
 
     void Start()
     {
+        cc.isTrigger = false;
         //StartCoroutine(SelectingPaterns());
     }
 
@@ -159,7 +160,7 @@ public class SunBehavior : MonoBehaviour {
     {
         GetComponent<SpriteRenderer>().sprite = angrySprite;
         Debug.Log("go invicible");
-        //cc.enabled = false;
+        cc.isTrigger = false;
         block = true;
     }
 
@@ -173,7 +174,7 @@ public class SunBehavior : MonoBehaviour {
     {
         GetComponent<SpriteRenderer>().sprite = normalSprite;
         Debug.Log("go vulnerable");
-        //cc.enabled = true;
+        cc.isTrigger = true;
         block = false;
     }
 

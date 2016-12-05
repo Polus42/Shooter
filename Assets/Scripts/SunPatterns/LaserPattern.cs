@@ -18,9 +18,9 @@ public class LaserPattern : IPattern
     //Options
     private float frequency = 5f;//waiting time between lasers
     private float duration = 5f;//per laser
-    private float startTime = 4f;//override start time (default 0)
+    private float startTime = 0f;//override start time (default 0)
     private float rotationSpeed = 0f;
-    private float toTargetSpeed = 0.5f;
+    private float toTargetSpeed = 0.7f;
 
     public LaserPattern(SunBehavior sb)
     {

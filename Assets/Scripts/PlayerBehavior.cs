@@ -70,7 +70,7 @@ public class PlayerBehavior : MonoBehaviour {
         _boostTime = 0;
         _rotateSpeed = initialSpeed;
         _shieldTime = 0;
-        transform.GetChild(3).gameObject.SetActive(false);
+        transform.GetChild(5).gameObject.SetActive(false);
         // Audio
         _audioSources = GetComponents<AudioSource>();
     }
@@ -156,7 +156,30 @@ public class PlayerBehavior : MonoBehaviour {
     //Invulnerable pendant 1sec
     IEnumerator noVulnerable()
     {
-        yield return new WaitForSeconds(1f);
+        //yield return new WaitForSeconds(1f);
+        Color blinkColor = Color.white;
+        blinkColor.a = 0f;
+        float duration = 1f;
+        var material = GetComponent<SpriteRenderer>().material;
+        float alpha = 0f;
+        float startTime = Time.time;
+        duration = duration / 2;
+        while (alpha < 1f)
+        {
+            alpha = Mathf.Lerp(0f, 1f, (Time.time - startTime) / duration);
+            blinkColor.a = alpha;
+            material.SetColor("_BlinkColor", blinkColor);
+            yield return null;
+        }
+        startTime = Time.time;
+        while (alpha > 0f)
+        {
+            alpha = Mathf.Lerp(1f, 0f, (Time.time - startTime) / duration);
+            blinkColor.a = alpha;
+            material.SetColor("_BlinkColor", blinkColor);
+            yield return null;
+        }
+
         vulnerable = true;
     }
 
@@ -240,7 +263,7 @@ public class PlayerBehavior : MonoBehaviour {
         if (_shieldTime == 0)
         {
             _shield = true;
-            transform.GetChild(3).gameObject.SetActive(true);
+            transform.GetChild(5).gameObject.SetActive(true);
             shieldCoroutine = StartCoroutine(shieldTimer());
             _shieldTime = shieldReloadTime;
         }
@@ -258,7 +281,7 @@ public class PlayerBehavior : MonoBehaviour {
     void noShield()
     {
         _shield = false;
-        transform.GetChild(3).gameObject.SetActive(false);
+        transform.GetChild(5).gameObject.SetActive(false);
         _audioSources[1].Stop();
     }
 

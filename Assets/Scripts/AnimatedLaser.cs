@@ -70,10 +70,16 @@ public class AnimatedLaser : MonoBehaviour {
         RaycastHit2D hit = Physics2D.Raycast(this.transform.position, laserDirection, maxLaserSize, playersMasks);
         Debug.DrawRay(transform.position, laserDirection* maxLaserSize, Color.green);
 
-        if (hit.collider != null 
-            && (hit.collider.gameObject.GetComponent<PlayerBehavior>() != null))
+        if(hit.collider != null && (hit.collider.gameObject.GetComponent<SenpaiController>() != null))
         {
             Debug.Log("laser touched !: " + hit.transform.gameObject.name);
+            hit.transform.gameObject.SendMessage("ApplyDamage", 1);
+        }
+
+        else if (hit.collider != null 
+            && (hit.collider.gameObject.GetComponent<PlayerBehavior>() != null))
+        {
+            Debug.Log("laser touched player !: " + hit.transform.gameObject.name);
             // We touched something!
             animator.SetBool("touchPlayer", true);
             hit.transform.gameObject.SendMessage("ApplyDamage", 1);
