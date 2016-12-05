@@ -116,11 +116,11 @@ public class SenpaiController : MonoBehaviour {
 
     IEnumerator introSpeaking()
     {
-        say("le soleil pique une crise !", 2, true);
-        say("detruisez-le avant qu'il\nne nous carbonise !", 2, true);
-        say("lorsqu'il explosera…\nje pourrais m'echapper", 2, true);
-        say("mais je n'aurais qu'une\nseule place à bord", 2, true);
-        say("si vous voulez survivre\nfaites-moi plaisir !", 2, true);
+        say("le soleil pique une crise !", 2.5f, true);
+        say("detruisez-le avant qu'il\nne nous carbonise !", 2.5f, true);
+        say("lorsqu'il explosera…\nje pourrais m'echapper", 2.5f, true);
+        say("mais je n'aurais qu'une\nseule place à bord", 2.5f, true);
+        say("si vous voulez survivre\nfaites-moi plaisir !", 2.5f, true);
         say("ha ha ha !", 2, false);
 
         yield return new WaitForSeconds(8f);
@@ -186,6 +186,13 @@ public class SenpaiController : MonoBehaviour {
 
     private void switchPhase(int index)
     {
+        if (index == 0)
+            say("n'oubliez pas de me proteger !", 2, false);
+        if (index == 1)
+            say("plus vous lui ferez mal \nplus ça me fera plaisir", 2, false);
+        if (index == 2)
+            say("moi je ne crains pas les météorites !", 2, false);
+
         Debug.Log("senpai change phase");
         stopCurrentMission();
         lastMission = null; //prob possible ici ?
@@ -247,18 +254,12 @@ public class SenpaiController : MonoBehaviour {
 
     void ApplyDamage(int amount)
     {
-        /*
         Debug.Log("sempai lose health");
         _health -= amount;
         if (_health <= 0)
         {
             Destroy(gameObject);
         }
-        */
-        if (!canBeTouched)
-            return;
-
-        startBlink();
     }
 
     // Displaying speech bubbles
@@ -459,6 +460,7 @@ public class SenpaiController : MonoBehaviour {
         // Rancune
         if (_rancuneP1)
         {
+            say("tu as voulu la jouer solo ? \nprends ça", 2, false);
             if (GameObject.Find("Player1")!=null)
             GameObject.Find("Player1").GetComponent<PlayerBehavior>().slow(3);
             _rancuneP1 = false;
@@ -470,6 +472,7 @@ public class SenpaiController : MonoBehaviour {
         // Rancune
         if (_rancuneP2)
         {
+            say("tu as voulu la jouer solo ? \nprends ça", 2, false);
             if (GameObject.Find("Player2") != null)
             GameObject.Find("Player2").GetComponent<PlayerBehavior>().slow(3);
             _rancuneP2 = false;
@@ -654,6 +657,7 @@ public class SenpaiController : MonoBehaviour {
             {
                 if (GameObject.Find("Player1") != null)
                 {
+                    //say("ahhhh ! /n ça fait mal !", 2, false);
                     GameObject.Find("Player1").GetComponent<PlayerBehavior>()._PF -= pointsLostOnTouchSenpai;
                     InfoScore.friendlyFire_J1();
                 }
@@ -662,6 +666,7 @@ public class SenpaiController : MonoBehaviour {
             {
                 if (GameObject.Find("Player2") != null)
                 {
+                    //say("ahhhh ! /nça fait mal !", 2, false);
                     GameObject.Find("Player2").GetComponent<PlayerBehavior>()._PF -= pointsLostOnTouchSenpai;
                     InfoScore.friendlyFire_J2();
                 }
