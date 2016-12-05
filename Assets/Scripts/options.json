@@ -23,7 +23,7 @@
 		"PatternsOptions": {
 			"startWait": 0,//Start waiting time (in addition of pauseTimeBetweenPhase)
 			"waveWait":5,//waiting time before selecting new pattern
-			"nextWait":20,//general duration for all pattern
+			"nextWait":8,//general duration for all pattern
 		},
 		"Patterns": {//patterns used for difficulty 1
 			"SurvivalPhase": {
@@ -47,7 +47,7 @@
 				},
 				"CyclicPattern_V1" : { //OK
 					"name": "CyclicPattern",
-					"probability": 0.2,
+					"probability": 0.4,
 					"cooldown": 30,
 					"angle": 1,
 					"frequency": 0.2,
@@ -85,7 +85,7 @@
 					"cooldown": 25,
 					"frequency": 0.1,
 					"angle": 90,
-					"radius": 1.5,
+					"radius": 1,
 					"bulletSpeed": 2,
 					"rotatingSpeed": 20,
 					"changeDirection": 1,
@@ -144,7 +144,7 @@
 			"SurvivalPhase": {
 				"RotationPattern_V2" : { //OK
 					"name": "RotationPattern",
-					"probability": 0.3,
+					"probability": 0.2,
 					"cooldown": 10,
 					"frequency": 0.4,
 					"angle": 90,
@@ -204,7 +204,7 @@
 			"AdaptationPhase": {
 				"RotationPattern_V3" : {
 					"name": "RotationPattern",
-					"probability": 0.0,
+					"probability": 0.1,
 					"cooldown": 10,
 					"frequency": 0.3,
 					"angle": 90,
@@ -216,14 +216,15 @@
 					"maxRadius": 5,
 					"numberHelixes": 4
 				},
-					"Laser1" : { //OK
+				"Laser1" : { //OK
 					"name": "LaserPattern",
-					"probability": 0.3,
+					"probability": 0.9,
 					"cooldown": 0,
-					"frequency": 5,
-					"duration": 10,
+					"frequency": 4,
 					"startTime": 0,
 					"rotationSpeed": 0.7,
+					"durationMin": 12,
+					"durationMax": 12,
 				},
 			},
 		},
@@ -258,7 +259,7 @@
 			"SurvivalPhase": {
 				"RotationPattern_V2" : { //OK
 					"name": "RotationPattern",
-					"probability": 0.3,
+					"probability": 0.2,
 					"cooldown": 10,
 					"frequency": 0.3,
 					"angle": 90,
@@ -298,7 +299,7 @@
 			"CounterPhase": {
 			"WavePattern" : { //OK
 					"name": "WavePattern",
-					"probability": 0.3,
+					"probability": 0.5,
 					"cooldown": 0,
 					"frequency": 0.5,
 					"angleAdd": 180,
@@ -314,7 +315,7 @@
 				},
 				"CyclicPattern_V1" : { //OK
 					"name": "CyclicPattern",
-					"probability": 0.3,
+					"probability": 0.5,
 					"cooldown": 30,
 					"angle": 1,
 					"frequency": 0.3,
@@ -328,16 +329,17 @@
 			"AdaptationPhase": {
 					"Laser1" : { //OK
 					"name": "LaserPattern",
-					"probability": 1,
+					"probability": 0.2,
 					"cooldown": 0,
-					"frequency": 5,
-					"duration": 10,
+					"frequency": 4,
 					"startTime": 0,
-					"rotationSpeed": 0.5
+					"rotationSpeed": 0.7,
+					"durationMin": 12,
+					"durationMax": 12,
 				},
 				"WavePattern" : { //OK
 					"name": "WavePattern",
-					"probability": 1,
+					"probability": 0.8,
 					"cooldown": 0,
 					"frequency": 1,
 					"angleAdd": 90,
