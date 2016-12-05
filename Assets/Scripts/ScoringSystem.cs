@@ -13,6 +13,8 @@ public class ScoringSystem : MonoBehaviour {
         _PF_P2_text = GameObject.Find("P2_PF").GetComponent<Text>();
         _p1 = GameObject.Find("Player1").GetComponent<PlayerBehavior>();
         _p2 = GameObject.Find("Player2").GetComponent<PlayerBehavior>();
+
+        Cursor.visible = false;
     }
 	
 	// Update is called once per frame
