@@ -71,4 +71,14 @@ public class CameraShake : MonoBehaviour
         if (shakeDuration < 0)
             shake = false;
     }
+
+    public void Shaking(float duration, float decreaseF)
+    {
+        shake = true;
+        shakeDuration = duration;
+        decreaseFactor = decreaseF;
+
+        if (shakeDuration < 0)
+            shake = false;
+    }
 }

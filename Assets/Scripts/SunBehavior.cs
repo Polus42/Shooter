@@ -95,14 +95,18 @@ public class SunBehavior : MonoBehaviour {
         weakPoint = transform.Find("WeakPoint");
     }
 
+    CameraShake cameraShake;
+    
     void Start()
     {
+        cameraShake = GameObject.Find("Main Camera").GetComponent<CameraShake>();
         cc.isTrigger = false;
         //StartCoroutine(SelectingPaterns());
     }
 
     void stopRrrr()
     {
+        cameraShake.Shaking();
         gameObject.GetComponents<AudioSource>()[4].Stop();
     }
 
@@ -148,6 +152,7 @@ public class SunBehavior : MonoBehaviour {
     void doExplode()
     {
         //animation
+        cameraShake.Shaking();
         GameObject explosion = (GameObject) Instantiate(explodePrefab, this.transform.position, Quaternion.identity);
         GetComponents<AudioSource>()[5].Play();
         GetComponent<Renderer>().enabled = false;
@@ -352,7 +357,7 @@ public class SunBehavior : MonoBehaviour {
             patternsAvailable.TryGetValue(currentOptions.name, out currentPattern);
             currentPattern.setOptions(currentOptions);
 
-            timeWait = patternsOP.waveWait;//Duration of the pattern
+            timeWait = patternsOP.nextWait;//Duration of the pattern
             if (currentOptions.durationMin > 0 && currentOptions.durationMax > currentOptions.durationMin)
             {
                 timeWait = Random.Range(currentOptions.durationMin, currentOptions.durationMax);

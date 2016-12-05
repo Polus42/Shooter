@@ -16,11 +16,14 @@ public class LaserPattern : IPattern
     private bool targetLocked = false;
 
     //Options
-    private float frequency = 5f;//waiting time between lasers
-    private float duration = 5f;//per laser
-    private float startTime = 0f;//override start time (default 0)
-    private float rotationSpeed = 0f;
-    private float toTargetSpeed = 0.7f;
+    //private float frequency = 5f;//waiting time between lasers
+    //private float startTime = 0f;//override start time (default 0)
+    //private float rotationSpeed = 0.7f;
+    //Useless
+    //private float duration = 5f;//per laser
+
+
+    CameraShake cameraShake;
 
     public LaserPattern(SunBehavior sb)
     {
@@ -30,10 +33,15 @@ public class LaserPattern : IPattern
     public void setOptions(OptionsHolder.IOptionPattern options)
     {
         this.options = (OptionsHolder.LaserPatternOP)options;
-        counterTime = startTime;
+        counterTime = this.options.startTime;
         animatedLaser = this.sb.gameObject.transform.GetChild(1);
+        targetLocked = false;
+        counterTime = 0;
         players = GameObject.FindGameObjectsWithTag("Player");
+        cameraShake = GameObject.Find("Main Camera").GetComponent<CameraShake>();
         target = selectTarget();
+
+        cameraShake.Shaking(Math.Abs(this.options.frequency - this.options.startTime), 1);
     }
 
     public void UpdatePattern()
@@ -51,7 +59,7 @@ public class LaserPattern : IPattern
             float rot_z = Mathf.Atan2(diff.y, diff.x) * Mathf.Rad2Deg;
             //sb.transform.rotation = Quaternion.Euler(0f, 0f, rot_z - 90);
             //sb.transform.rotation = Quaternion.Lerp(sb.transform.rotation, Quaternion.FromToRotation(sb.transform.position, target.transform.position - sb.transform.position), Time.deltaTime);
-            sb.transform.rotation = Quaternion.Slerp(sb.transform.rotation, Quaternion.Euler(0f, 0f, rot_z + 90), Time.deltaTime * toTargetSpeed);
+            sb.transform.rotation = Quaternion.Slerp(sb.transform.rotation, Quaternion.Euler(0f, 0f, rot_z + 90), Time.deltaTime * this.options.rotationSpeed);
         }
         else
         {
@@ -60,13 +68,17 @@ public class LaserPattern : IPattern
             selectTarget();
         }
         
-
-        counterTime += Time.deltaTime;
-        if (counterTime >= frequency)
+        if(!targetLocked)
         {
-            emitLaser();
-            counterTime = 0;
+            counterTime += Time.deltaTime;
+            if (counterTime >= this.options.frequency)
+            {
+                emitLaser();
+                counterTime = 0;
+                targetLocked = true;
+            }
         }
+        
        
         //sb.transform.right = target.transform.position - sb.transform.position;
     }
@@ -78,6 +90,7 @@ public class LaserPattern : IPattern
 
     void emitLaser()
     {
+          
         animatedLaser.gameObject.SetActive(true);
         
         //animatedLaser.gameObject.SetActive(false);
