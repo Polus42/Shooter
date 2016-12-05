@@ -114,6 +114,8 @@ public class SenpaiController : MonoBehaviour {
         InfoScore = GameObject.Find("Canvas").GetComponent<infoScore>();
     }
 
+    Coroutine missionSystemCoroutine;
+
     IEnumerator introSpeaking()
     {
         say("le soleil pique une crise !", 2.5f, true);
@@ -125,7 +127,7 @@ public class SenpaiController : MonoBehaviour {
 
         yield return new WaitForSeconds(8f);
         EventManager.TriggerEvent("IntroOver");
-        StartCoroutine(startMissionSystem());
+        missionSystemCoroutine = StartCoroutine(startMissionSystem());
     }
 
     private bool endgame = false;
@@ -343,7 +345,7 @@ public class SenpaiController : MonoBehaviour {
             if (GameObject.Find("Player1") != null)
                 GameObject.Find("Player1").GetComponent<PlayerBehavior>()._PF += pointsOnWeakpointDestroyed +1;//besoin impair pour pas egalite
             if (GameObject.Find("Player2")!= null)
-                GameObject.Find("Player2").GetComponent<PlayerBehavior>()._PF += pointsOnWeakpointDestroyed +1;
+                GameObject.Find("Player2").GetComponent<PlayerBehavior>()._PF += pointsOnWeakpointDestroyed;
             _MissionDestroyWeakpoint = false;
             InfoScore.weakPointDestroyed_J1();
         }
@@ -353,7 +355,7 @@ public class SenpaiController : MonoBehaviour {
         if (_MissionDestroyWeakpoint)
         {
             if (GameObject.Find("Player1") != null)
-                GameObject.Find("Player1").GetComponent<PlayerBehavior>()._PF += pointsOnWeakpointDestroyed;
+                GameObject.Find("Player1").GetComponent<PlayerBehavior>()._PF += pointsOnWeakpointDestroyed + 1;
             if (GameObject.Find("Player2") != null)
                 GameObject.Find("Player2").GetComponent<PlayerBehavior>()._PF += pointsOnWeakpointDestroyed;
             _MissionDestroyWeakpoint = false;
@@ -747,11 +749,19 @@ public class SenpaiController : MonoBehaviour {
 
     void stopCurrentMission()
     {
+        //StopAllCoroutines();//peut pas a cause messages
+        if(missionSystemCoroutine != null)//cancel ce timer
+        {
+            StopCoroutine(missionSystemCoroutine);
+            missionSystemCoroutine = StartCoroutine(startMissionSystem());
+        }
+
         if(currentCoroutineMission != null)
         {
             StopCoroutine(currentCoroutineMission);
             _MissionDestroyWeakpoint = _MissionAttackSun = _MissionGetAway = _MissionStopFireing = _MissionStayNearMe = false;
         }
+        
     }
 
     void startRandomMission()
