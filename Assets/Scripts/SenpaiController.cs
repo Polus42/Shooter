@@ -302,6 +302,7 @@ public class SenpaiController : MonoBehaviour {
         {
             greyBackground.SetActive(true);
             Time.timeScale = slowTimeScale;
+            //Time.fixedDeltaTime = slowTimeScale * 0.02f;//smooth mais etrange au niveau bullet
         }
             
         _whatimsaying = text;
@@ -311,6 +312,7 @@ public class SenpaiController : MonoBehaviour {
         if (slowTime)
         {
             Time.timeScale = 1;
+            //Time.fixedDeltaTime = 1 * 0.02f;
             greyBackground.SetActive(false);
         }
 
