@@ -247,12 +247,18 @@ public class SenpaiController : MonoBehaviour {
 
     void ApplyDamage(int amount)
     {
+        /*
         Debug.Log("sempai lose health");
         _health -= amount;
         if (_health <= 0)
         {
             Destroy(gameObject);
         }
+        */
+        if (!canBeTouched)
+            return;
+
+        startBlink();
     }
 
     // Displaying speech bubbles

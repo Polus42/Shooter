@@ -159,7 +159,9 @@ public class PlayerBehavior : MonoBehaviour {
         //yield return new WaitForSeconds(1f);
         Color blinkColor = Color.white;
         blinkColor.a = 0f;
-        float duration = 1f;
+
+        float duration = 1f;//duration invulnerable  !!!
+
         var material = GetComponent<SpriteRenderer>().material;
         float alpha = 0f;
         float startTime = Time.time;
