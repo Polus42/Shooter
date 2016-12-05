@@ -14,6 +14,7 @@ public class button : MonoBehaviour {
 	void Start () {
         //gameObject.renderer.enabled = false;
         _sources = GetComponents<AudioSource>();
+        Cursor.visible = false;
     }
 	
 	// Update is called once per frame

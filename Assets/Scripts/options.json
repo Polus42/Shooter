@@ -222,8 +222,8 @@
 					"cooldown": 0,
 					"frequency": 5,
 					"duration": 10,
-					"startTime": 2,
-					"rotationSpeed": 0.5
+					"startTime": 0,
+					"rotationSpeed": 0.7,
 				},
 			},
 		},
@@ -328,11 +328,11 @@
 			"AdaptationPhase": {
 					"Laser1" : { //OK
 					"name": "LaserPattern",
-					"probability": 0.3,
+					"probability": 1,
 					"cooldown": 0,
 					"frequency": 5,
 					"duration": 10,
-					"startTime": 2,
+					"startTime": 0,
 					"rotationSpeed": 0.5
 				},
 				"WavePattern" : { //OK

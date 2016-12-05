@@ -468,7 +468,7 @@ public class SenpaiController : MonoBehaviour {
         // Rancune
         if (_rancuneP1)
         {
-            say("tu as voulu la jouer solo ? \nprends ça", 2, false);
+            say("tu as voulu la jouer solo ?\nprends ça", 2, false);
             if (GameObject.Find("Player1")!=null)
             GameObject.Find("Player1").GetComponent<PlayerBehavior>().slow(3);
             _rancuneP1 = false;
