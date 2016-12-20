@@ -276,9 +276,11 @@ public class SenpaiController : MonoBehaviour {
         GUI.skin = messages;
         if (_whatimsaying!="")
         {
+            Vector2 currentSize = new Vector2(messageSize.x * Screen.width / 1280, messageSize.y * Screen.height / 720);
             Vector2 v = Vector2.Lerp(new Vector3(0,0,0),transform.position,0.5f);
             Vector2 v2 = Camera.main.WorldToScreenPoint(v);
-            GUI.Box(new Rect(v2.x-messageSize.x/2, Screen.height- v2.y-messageSize.y/2, messageSize.x, messageSize.y), _whatimsaying);
+            GUI.skin.box.fontSize = 14 * Screen.height / 720;
+            GUI.Box(new Rect(v2.x- currentSize.x/2, Screen.height- v2.y- currentSize.y/2, currentSize.x, currentSize.y), _whatimsaying);
         }
     }
 
